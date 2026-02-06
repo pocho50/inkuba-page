@@ -14,3 +14,21 @@
 @theme {
   --font-sans: "Public Sans", sans-serif;
 }
+
+/* Remove border radius from features in tech section */
+#tech-section [data-slot="root"][class*="border-l"] {
+  border-radius: 0 !important;
+}
+
+/* Hover effect on icons in tech section features */
+#tech-section [data-slot="root"] {
+  cursor: pointer;
+}
+
+#tech-section [data-slot="root"] [data-slot="leading"] .iconify {
+  transition: transform 0.3s ease-out;
+}
+
+#tech-section [data-slot="root"]:hover [data-slot="leading"] .iconify {
+  transform: scale(1.2);
+}

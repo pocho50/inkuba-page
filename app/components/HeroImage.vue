@@ -7,7 +7,7 @@ const props = withDefaults(
     floating?: boolean;
   }>(),
   {
-    sizeClass: "h-44 sm:h-56 lg:h-72",
+    sizeClass: "h-44 sm:h-56 lg:h-82",
     floating: true,
   },
 );

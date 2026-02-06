@@ -39,6 +39,7 @@ useSeoMeta({
     </AppHeroHeader>
 
     <UPageSection
+      id="tech-section"
       :description="page.section.description"
       :features="page.section.features"
       orientation="horizontal"
@@ -51,6 +52,13 @@ useSeoMeta({
       <template #title>
         <MDC :value="page.section.title" class="sm:*:leading-11" />
       </template>
+
+      <template #description>
+        <p class="text-lg text-muted leading-relaxed">
+          {{ page.section.description }}
+        </p>
+      </template>
+
       <MaskedPreview
         :src="page.section.images.desktop || ''"
         :alt="page.section.title"

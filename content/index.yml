@@ -21,21 +21,28 @@ hero:
       to: https://github.com/nuxt-ui-templates/landing
       target: _blank
 section:
-  title: "[Revolutionize]{.text-primary} your coding experience"
-  description: Transform your development workflow with AI-powered insights and personalized productivity optimization.
+  title: "Tecnologías [modernas]{.text-primary} para resultados excepcionales"
+  description: Dominamos el ecosistema de desarrollo web moderno. Desde frameworks frontend reactivos hasta backends robustos, usamos las herramientas líderes de la industria para construir aplicaciones escalables y de alto rendimiento.
   images:
     mobile: "/code.png"
     desktop: "/code.png"
   features:
-    - title: Optimize your focus time
-      description: Let AI identify your peak coding hours and adapt to your natural rhythm. Focus on what matters most - writing great code, while our system optimizes your productivity patterns.
-      class: border-l border-primary pl-4
-    - title: Track your best coding hours
-      description: Track when you code best with smart analytics. Get actionable insights to tackle challenging tasks during your peak performance hours.
-      class: border-l border-default pt-4 pl-4
-    - title: Improve workflow efficiency
-      description: Automate your workflow optimization from code snippets to focus management. Ship better code faster with a streamlined development process.
-      class: border-l border-default pt-4 pl-4
+    - title: Expertos en Vue & Nuxt
+      description: Experiencias de usuario fluidas. Aprovechamos la potencia de Nuxt para crear aplicaciones web ultrarrápidas y optimizadas para SEO desde el primer día.
+      icon: i-simple-icons-nuxtdotjs
+      class: border-l border-default hover:border-primary pl-4 py-2 transition-colors
+    - title: Python para Backend
+      description: APIs modernas y procesamiento de datos eficiente. Usamos Python para construir infraestructuras seguras que crecen al ritmo de tu negocio.
+      icon: i-simple-icons-python
+      class: border-l border-default hover:border-primary pt-4 pl-4 py-2 transition-colors
+    - title: Laravel para soluciones PHP
+      description: Desarrollo ágil con el ecosistema más maduro del mercado. Ideal para entregar plataformas complejas y seguras en tiempos reducidos.
+      icon: i-simple-icons-laravel
+      class: border-l border-default hover:border-primary pt-4 pl-4 py-2 transition-colors
+    - title: Astro para sitios estáticos
+      description: Rendimiento extremo con arquitectura "Zero JavaScript". La elección perfecta para landing pages donde cada milisegundo de carga cuenta.
+      icon: i-simple-icons-astro
+      class: border-l border-default hover:border-primary pt-4 pl-4 py-2 transition-colors
 features:
   title: Take control of your [productivity]{.text-primary}
   description: Make every coding session count with smart analytics and workflow optimization.

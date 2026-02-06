@@ -22,7 +22,13 @@ const props = withDefaults(
 
 <template>
   <div :class="props.wrapperClass">
-    <div :class="['mask-[url(' + props.maskSrc + ')]', props.maskClass]" />
+    <div
+      :class="props.maskClass"
+      :style="{
+        maskImage: `url(${props.maskSrc})`,
+        webkitMaskImage: `url(${props.maskSrc})`,
+      }"
+    />
     <div class="absolute inset-0 flex items-center justify-center">
       <img :src="props.src" :alt="props.alt" :class="props.imageClass" />
     </div>
