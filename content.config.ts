@@ -69,6 +69,13 @@ export const collections = {
       features: createBaseSchema().extend({
         features: z.array(createFeatureSchema()),
       }),
+      ai: createBaseSchema().extend({
+        features: z.array(
+          createBaseSchema().extend({
+            icon: z.string().editor({ input: "icon" }),
+          }),
+        ),
+      }),
       steps: createBaseSchema().extend({
         items: z.array(
           createFeatureSchema().extend({

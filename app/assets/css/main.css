@@ -32,3 +32,12 @@
 #tech-section [data-slot="root"]:hover [data-slot="leading"] .iconify {
   transform: scale(1.2);
 }
+
+/* Increase line-height for multi-line section titles */
+[data-slot="title"] {
+  line-height: 1.4 !important;
+}
+
+[data-slot="title"] * {
+  line-height: 1.4 !important;
+}
