@@ -124,8 +124,8 @@ useSeoMeta({
     <USeparator :ui="{ border: 'border-primary/30' }" />
 
     <UPageSection
-      id="steps"
-      :description="page.steps.description"
+      id="blog"
+      :description="page.blog.description"
       class="relative overflow-hidden"
     >
       <template #headline>
@@ -136,71 +136,52 @@ useSeoMeta({
         />
       </template>
       <template #title>
-        <MDC :value="page.steps.title" />
+        <MDC :value="page.blog.title" />
       </template>
 
       <template #features>
         <UPageCard
-          v-for="(step, index) in page.steps.items"
+          v-for="(article, index) in page.blog.articles"
           :key="index"
-          class="group"
-          :ui="{ container: 'p-4 sm:p-4', title: 'flex items-center gap-1' }"
+          :to="article.to"
+          class="group blog-card"
+          :style="{ '--blog-delay': `${index * 150}ms` }"
+          :ui="{
+            container: 'p-5 sm:p-6',
+            title: 'flex items-center gap-2',
+          }"
         >
-          <UColorModeImage
-            v-if="step.image"
-            :light="step.image?.light"
-            :dark="step.image?.dark"
-            :alt="step.title"
-            class="size-full"
-          />
+          <div class="flex items-center justify-between gap-3">
+            <UBadge :label="article.category" variant="subtle" size="sm" />
+            <span class="text-xs text-muted">{{ article.date }}</span>
+          </div>
 
-          <div class="flex flex-col gap-2">
-            <span class="text-lg font-semibold">
-              {{ step.title }}
-            </span>
-            <span class="text-sm text-muted">
-              {{ step.description }}
-            </span>
+          <div class="mt-4 flex items-start gap-3">
+            <div
+              class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20"
+            >
+              <UIcon :name="article.icon" class="size-5 text-primary" />
+            </div>
+            <div class="flex flex-col gap-2">
+              <span
+                class="text-lg font-semibold text-highlighted transition-colors duration-300 group-hover:text-primary"
+              >
+                {{ article.title }}
+              </span>
+              <span class="text-sm leading-relaxed text-muted">
+                {{ article.description }}
+              </span>
+            </div>
+          </div>
+
+          <div
+            class="mt-4 flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1"
+          >
+            Leer más
+            <UIcon name="i-lucide-arrow-right" class="size-4" />
           </div>
         </UPageCard>
       </template>
-    </UPageSection>
-
-    <UPageSection
-      id="pricing"
-      class="mb-32 overflow-hidden"
-      :title="page.pricing.title"
-      :description="page.pricing.description"
-      :ui="{ title: 'text-left @container relative', description: 'text-left' }"
-    >
-      <template #title>
-        <MDC :value="page.pricing.title" />
-
-        <div class="hidden @min-[1120px]:block">
-          <UColorModeImage
-            light="/images/light/line-4.svg"
-            dark="/images/dark/line-4.svg"
-            class="absolute top-0 right-0 size-full transform translate-x-[60%]"
-          />
-        </div>
-      </template>
-
-      <UPricingPlans scale>
-        <UPricingPlan
-          v-for="(plan, index) in page.pricing.plans"
-          :key="index"
-          :title="plan.title"
-          :description="plan.description"
-          :price="plan.price"
-          :billing-period="plan.billing_period"
-          :billing-cycle="plan.billing_cycle"
-          :highlight="plan.highlight"
-          :scale="plan.highlight"
-          variant="soft"
-          :features="plan.features"
-          :button="plan.button"
-        />
-      </UPricingPlans>
     </UPageSection>
 
     <UPageSection

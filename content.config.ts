@@ -76,15 +76,13 @@ export const collections = {
           }),
         ),
       }),
-      steps: createBaseSchema().extend({
-        items: z.array(
-          createFeatureSchema().extend({
-            image: z
-              .object({
-                light: z.string().editor({ input: "media" }),
-                dark: z.string().editor({ input: "media" }),
-              })
-              .optional(),
+      blog: createBaseSchema().extend({
+        articles: z.array(
+          createBaseSchema().extend({
+            date: z.string().nonempty(),
+            category: z.string().nonempty(),
+            icon: z.string().editor({ input: "icon" }),
+            to: z.string().nonempty(),
           }),
         ),
       }),

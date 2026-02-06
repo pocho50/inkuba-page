@@ -65,25 +65,28 @@ ai:
     - title: Optimización Continua
       description: Tus aplicaciones mejoran automáticamente con el tiempo. La IA aprende del uso real, optimizando rendimiento y personalizando la experiencia.
       icon: i-lucide-sparkles
-steps:
-  title: Start coding smarter in [3 steps]{.text-primary}
-  description: Transform your development workflow with our AI-powered assistant.
-  items:
-    - title: Connect Your IDE
-      description: Seamlessly integrate with VS Code, JetBrains, or your preferred editor. Get started in under 2 minutes with zero configuration needed.
-      image:
-        light: "/images/light/connect.svg"
-        dark: "/images/dark/connect.svg"
-    - title: Track & Analyze
-      description: Our AI silently monitors your coding patterns to identify your peak productivity hours and potential workflow bottlenecks.
-      image:
-        light: "/images/light/optimize.svg"
-        dark: "/images/dark/optimize.svg"
-    - title: Optimize & Code Smarter
-      description: Receive personalized recommendations to enhance your coding efficiency. Watch your productivity soar with data-driven insights.
-      image:
-        light: "/images/light/track.svg"
-        dark: "/images/dark/track.svg"
+blog:
+  title: "Últimos [artículos]{.text-primary} del blog"
+  description: "Exploramos tendencias, compartimos conocimiento y documentamos nuestro camino en el desarrollo de software y la inteligencia artificial."
+  articles:
+    - title: "Cómo la IA está transformando el desarrollo web"
+      description: "Descubrí cómo los modelos de lenguaje y las herramientas de IA están revolucionando la forma en que construimos aplicaciones modernas."
+      date: "2025-12-15"
+      category: "Inteligencia Artificial"
+      icon: i-lucide-brain-circuit
+      to: "#"
+    - title: "Nuxt 4: todo lo que necesitás saber"
+      description: "Un recorrido por las novedades de Nuxt 4, mejoras de rendimiento y cómo migrar tus proyectos existentes sin dolor."
+      date: "2025-11-28"
+      category: "Frontend"
+      icon: i-simple-icons-nuxtdotjs
+      to: "#"
+    - title: "Automatización de procesos con Python y FastAPI"
+      description: "Aprende a construir pipelines de automatización robustos que escalan con tu negocio usando Python y FastAPI."
+      date: "2025-11-10"
+      category: "Backend"
+      icon: i-simple-icons-python
+      to: "#"
 pricing:
   title: Choose your [productivity]{.text-primary} path
   description: Unlock AI-powered coding efficiency with our flexible plans. Whether you're a solo developer or part of a team, we have the perfect toolset to maximize your development workflow.
