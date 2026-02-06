@@ -69,6 +69,19 @@ export const collections = {
       features: createBaseSchema().extend({
         features: z.array(createFeatureSchema()),
       }),
+      vuenuxt: createBaseSchema().extend({
+        reasons: z.array(
+          createBaseSchema().extend({
+            icon: z.string().editor({ input: "icon" }),
+          }),
+        ),
+        highlights: z.array(
+          z.object({
+            label: z.string().nonempty(),
+            description: z.string().nonempty(),
+          }),
+        ),
+      }),
       ai: createBaseSchema().extend({
         features: z.array(
           createBaseSchema().extend({

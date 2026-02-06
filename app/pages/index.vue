@@ -54,7 +54,7 @@ useSeoMeta({
       </template>
 
       <template #description>
-        <p class="text-lg text-muted leading-relaxed">
+        <p class="text-lg text-muted leading-relaxed text-left">
           {{ page.section.description }}
         </p>
       </template>
@@ -70,10 +70,89 @@ useSeoMeta({
     <USeparator :ui="{ border: 'border-primary/30' }" />
 
     <UPageSection
+      id="vuenuxt"
+      class="relative overflow-hidden"
+      :ui="{
+        title: 'text-left',
+        description: 'text-left',
+      }"
+    >
+      <div
+        class="absolute -right-20 top-1/3 size-[400px] rounded-full bg-primary/10 blur-[150px]"
+      />
+
+      <template #title>
+        <div class="flex flex-col gap-5">
+          <div class="flex items-center gap-4">
+            <UIcon
+              name="i-simple-icons-vuedotjs"
+              class="size-10 text-[#4FC08D] transition-transform duration-500 hover:rotate-12"
+            />
+            <UIcon name="i-lucide-plus" class="size-4 text-muted" />
+            <UIcon
+              name="i-simple-icons-nuxtdotjs"
+              class="size-10 text-[#00DC82] transition-transform duration-500 hover:rotate-12"
+            />
+          </div>
+          <MDC :value="page.vuenuxt.title" class="*:leading-9 *:my-0" />
+        </div>
+      </template>
+
+      <template #description>
+        <p class="text-lg leading-relaxed text-muted">
+          {{ page.vuenuxt.description }}
+        </p>
+      </template>
+
+      <UContainer>
+        <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div
+            v-for="(reason, index) in page.vuenuxt.reasons"
+            :key="index"
+            class="vuenuxt-reason group flex flex-col gap-3 rounded-lg border border-default bg-default/50 p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
+            :style="{ '--vuenuxt-delay': `${index * 100}ms` }"
+          >
+            <div
+              class="flex size-11 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20"
+            >
+              <UIcon :name="reason.icon" class="size-5 text-primary" />
+            </div>
+            <h4 class="text-lg font-semibold text-highlighted">
+              {{ reason.title }}
+            </h4>
+            <p class="text-sm leading-relaxed text-muted">
+              {{ reason.description }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          class="mt-10 flex flex-wrap items-center justify-center gap-10 border-t border-default pt-8"
+        >
+          <div
+            v-for="(highlight, index) in page.vuenuxt.highlights"
+            :key="index"
+            class="flex flex-col items-center"
+          >
+            <span class="text-2xl font-bold text-primary">
+              {{ highlight.label }}
+            </span>
+            <span class="text-xs text-muted">
+              {{ highlight.description }}
+            </span>
+          </div>
+        </div>
+      </UContainer>
+    </UPageSection>
+
+    <USeparator :ui="{ border: 'border-primary/30' }" />
+
+    <UPageSection
       id="ai"
       class="relative overflow-hidden"
       :ui="{
         title: 'text-left @container relative',
+        description: 'text-left',
       }"
     >
       <div
@@ -125,8 +204,10 @@ useSeoMeta({
 
     <UPageSection
       id="blog"
-      :description="page.blog.description"
       class="relative overflow-hidden"
+      :ui="{
+        description: 'text-left sm:text-center',
+      }"
     >
       <template #headline>
         <UColorModeImage
@@ -137,6 +218,12 @@ useSeoMeta({
       </template>
       <template #title>
         <MDC :value="page.blog.title" />
+      </template>
+
+      <template #description>
+        <p class="text-lg leading-relaxed text-muted">
+          {{ page.blog.description }}
+        </p>
       </template>
 
       <template #features>
@@ -186,9 +273,10 @@ useSeoMeta({
 
     <UPageSection
       id="testimonials"
-      :title="page.testimonials.title"
-      :description="page.testimonials.description"
       :items="page.testimonials.items"
+      :ui="{
+        description: 'text-left sm:text-center',
+      }"
     >
       <template #headline>
         <UColorModeImage
@@ -199,6 +287,12 @@ useSeoMeta({
       </template>
       <template #title>
         <MDC :value="page.testimonials.title" />
+      </template>
+
+      <template #description>
+        <p class="text-lg leading-relaxed text-muted">
+          {{ page.testimonials.description }}
+        </p>
       </template>
 
       <UContainer>
