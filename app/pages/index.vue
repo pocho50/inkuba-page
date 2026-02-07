@@ -10,6 +10,10 @@ if (!page.value) {
   });
 }
 
+const { data: blogArticles } = await useAsyncData("home-blog", () =>
+  queryCollection("blog").order("date", "DESC").limit(3).all(),
+);
+
 useSeoMeta({
   title: page.value.seo?.title || page.value.title,
   ogTitle: page.value.seo?.title || page.value.title,
@@ -29,9 +33,9 @@ useSeoMeta({
     </div>
 
     <AppHeroHeader
-      :title="page.title"
-      :description="page.description"
-      :image="page.image"
+      :title="page?.title"
+      :description="page?.description"
+      :image="page?.image"
     >
       <template #background>
         <HeroBackground />
@@ -50,18 +54,18 @@ useSeoMeta({
       reverse
     >
       <template #title>
-        <MDC :value="page.section.title" class="sm:*:leading-11" />
+        <MDC :value="page?.section?.title || ''" class="sm:*:leading-11" />
       </template>
 
       <template #description>
         <p class="text-lg text-muted leading-relaxed text-left">
-          {{ page.section.description }}
+          {{ page?.section?.description }}
         </p>
       </template>
 
       <MaskedPreview
-        :src="page.section.images.desktop || ''"
-        :alt="page.section.title"
+        :src="page?.section?.images?.desktop || ''"
+        :alt="page?.section?.title"
         mask-src="/mask-code.png"
         wrapper-class="relative place-self-center mt-8 w-[280px] h-[280px] sm:w-[360px] sm:h-[360px] lg:mt-0 lg:w-[500px] lg:h-[500px] pt-10"
       />
@@ -94,20 +98,20 @@ useSeoMeta({
               class="size-10 text-[#00DC82] transition-transform duration-500 hover:rotate-12"
             />
           </div>
-          <MDC :value="page.vuenuxt.title" class="*:leading-9 *:my-0" />
+          <MDC :value="page?.vuenuxt?.title || ''" class="*:leading-9 *:my-0" />
         </div>
       </template>
 
       <template #description>
         <p class="text-lg leading-relaxed text-muted">
-          {{ page.vuenuxt.description }}
+          {{ page?.vuenuxt?.description }}
         </p>
       </template>
 
       <UContainer>
         <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
           <div
-            v-for="(reason, index) in page.vuenuxt.reasons"
+            v-for="(reason, index) in page?.vuenuxt?.reasons"
             :key="index"
             class="vuenuxt-reason group flex flex-col gap-3 rounded-lg border border-default bg-default/50 p-5 transition-all duration-300 hover:border-primary/40 hover:shadow-md hover:shadow-primary/5"
             :style="{ '--vuenuxt-delay': `${index * 100}ms` }"
@@ -130,7 +134,7 @@ useSeoMeta({
           class="mt-10 flex flex-wrap items-center justify-center gap-10 border-t border-default pt-8"
         >
           <div
-            v-for="(highlight, index) in page.vuenuxt.highlights"
+            v-for="(highlight, index) in page?.vuenuxt?.highlights"
             :key="index"
             class="flex flex-col items-center"
           >
@@ -167,7 +171,7 @@ useSeoMeta({
       />
 
       <template #title>
-        <MDC :value="page.ai.title" class="*:leading-9 *:my-0" />
+        <MDC :value="page?.ai?.title || ''" class="*:leading-9 *:my-0" />
 
         <div class="hidden @min-[1020px]:block">
           <UColorModeImage
@@ -181,7 +185,7 @@ useSeoMeta({
       <template #description>
         <div class="w-full!">
           <p class="text-lg leading-relaxed text-muted">
-            {{ page.ai.description }}
+            {{ page?.ai?.description }}
           </p>
         </div>
       </template>
@@ -189,7 +193,7 @@ useSeoMeta({
       <UContainer>
         <div class="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
           <AiFeatureCard
-            v-for="(feature, index) in page.ai.features"
+            v-for="(feature, index) in page?.ai?.features"
             :key="index"
             :title="feature.title"
             :description="feature.description"
@@ -217,113 +221,85 @@ useSeoMeta({
         />
       </template>
       <template #title>
-        <MDC :value="page.blog.title" />
+        <MDC :value="page?.blog?.title || ''" />
       </template>
 
       <template #description>
         <p class="text-lg leading-relaxed text-muted">
-          {{ page.blog.description }}
-        </p>
-      </template>
-
-      <template #features>
-        <UPageCard
-          v-for="(article, index) in page.blog.articles"
-          :key="index"
-          :to="article.to"
-          class="group blog-card"
-          :style="{ '--blog-delay': `${index * 150}ms` }"
-          :ui="{
-            container: 'p-5 sm:p-6',
-            title: 'flex items-center gap-2',
-          }"
-        >
-          <div class="flex items-center justify-between gap-3">
-            <UBadge :label="article.category" variant="subtle" size="sm" />
-            <span class="text-xs text-muted">{{ article.date }}</span>
-          </div>
-
-          <div class="mt-4 flex items-start gap-3">
-            <div
-              class="flex size-10 shrink-0 items-center justify-center rounded-lg border border-primary/20 bg-primary/10 transition-all duration-300 group-hover:scale-110 group-hover:bg-primary/20"
-            >
-              <UIcon :name="article.icon" class="size-5 text-primary" />
-            </div>
-            <div class="flex flex-col gap-2">
-              <span
-                class="text-lg font-semibold text-highlighted transition-colors duration-300 group-hover:text-primary"
-              >
-                {{ article.title }}
-              </span>
-              <span class="text-sm leading-relaxed text-muted">
-                {{ article.description }}
-              </span>
-            </div>
-          </div>
-
-          <div
-            class="mt-4 flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1"
-          >
-            Leer más
-            <UIcon name="i-lucide-arrow-right" class="size-4" />
-          </div>
-        </UPageCard>
-      </template>
-    </UPageSection>
-
-    <UPageSection
-      id="testimonials"
-      :items="page.testimonials.items"
-      :ui="{
-        description: 'text-left sm:text-center',
-      }"
-    >
-      <template #headline>
-        <UColorModeImage
-          light="/images/light/line-5.svg"
-          dark="/images/dark/line-5.svg"
-          class="absolute -top-10 sm:top-0 right-1/2 h-24"
-        />
-      </template>
-      <template #title>
-        <MDC :value="page.testimonials.title" />
-      </template>
-
-      <template #description>
-        <p class="text-lg leading-relaxed text-muted">
-          {{ page.testimonials.description }}
+          {{ page?.blog?.description }}
         </p>
       </template>
 
       <UContainer>
-        <UPageColumns class="xl:columns-3">
-          <UPageCard
-            v-for="(testimonial, index) in page.testimonials.items"
-            :key="index"
-            variant="subtle"
-            :description="testimonial.quote"
-            :ui="{
-              description:
-                'before:content-[open-quote] after:content-[close-quote]',
-            }"
+        <div
+          v-if="blogArticles?.length"
+          class="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
+        >
+          <NuxtLink
+            v-for="(article, index) in blogArticles"
+            :key="article.path"
+            :to="article.path"
+            class="blog-card group flex flex-col overflow-hidden rounded-xl border border-default bg-default/50 transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
+            :style="{ '--blog-delay': `${index * 150}ms` }"
           >
-            <template #footer>
-              <UUser v-bind="testimonial.user" size="xl" />
-            </template>
-          </UPageCard>
-        </UPageColumns>
+            <div class="relative h-40 overflow-hidden bg-elevated">
+              <div
+                class="absolute inset-0 flex items-center justify-center bg-primary/5"
+              >
+                <UIcon
+                  :name="article.icon || 'i-lucide-file-text'"
+                  class="size-14 text-primary/30 transition-transform duration-500 group-hover:scale-110 group-hover:text-primary/50"
+                />
+              </div>
+            </div>
+
+            <div class="flex flex-1 flex-col gap-3 p-5">
+              <div class="flex items-center justify-between gap-3">
+                <UBadge :label="article.category" variant="subtle" size="sm" />
+                <span class="text-xs text-muted">{{ article.date }}</span>
+              </div>
+
+              <h3
+                class="text-lg font-semibold text-highlighted transition-colors duration-300 group-hover:text-primary"
+              >
+                {{ article.title }}
+              </h3>
+
+              <p class="flex-1 text-sm leading-relaxed text-muted">
+                {{ article.description }}
+              </p>
+
+              <div
+                class="mt-2 flex items-center gap-1 text-sm font-medium text-primary opacity-0 transition-all duration-300 group-hover:opacity-100 group-hover:translate-x-1"
+              >
+                Leer más
+                <UIcon name="i-lucide-arrow-right" class="size-4" />
+              </div>
+            </div>
+          </NuxtLink>
+        </div>
+
+        <div class="mt-10 flex justify-center">
+          <NuxtLink
+            to="/blog"
+            class="inline-flex items-center gap-2 rounded-lg border border-default px-6 py-3 text-sm font-medium text-muted transition-all duration-300 hover:border-primary/40 hover:text-primary hover:shadow-md hover:shadow-primary/5"
+          >
+            Ver todos los artículos
+            <UIcon name="i-lucide-arrow-right" class="size-4" />
+          </NuxtLink>
+        </div>
       </UContainer>
     </UPageSection>
 
     <USeparator />
 
     <UPageCTA
-      v-bind="page.cta"
+      v-bind="page?.cta"
       variant="naked"
       class="overflow-hidden @container"
     >
       <template #title>
-        <MDC :value="page.cta.title" />
+        <MDC :value="page?.cta?.title || ''" />
 
         <div class="@max-[1280px]:hidden">
           <UColorModeImage

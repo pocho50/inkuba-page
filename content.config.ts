@@ -46,6 +46,16 @@ const createFeatureSchema = () =>
   });
 
 export const collections = {
+  blog: defineCollection({
+    source: "blog/**",
+    type: "page",
+    schema: z.object({
+      date: z.string().nonempty(),
+      category: z.string().nonempty(),
+      icon: z.string().optional().editor({ input: "icon" }),
+      image: z.string().optional().editor({ input: "media" }),
+    }),
+  }),
   content: defineCollection({
     source: "index.yml",
     type: "page",
