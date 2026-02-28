@@ -37,6 +37,7 @@ type ContactFormState = {
   name: string;
   email: string;
   project: string;
+  turnstileToken: string;
 };
 
 type ContactFormError = {
@@ -55,6 +56,7 @@ const contactForm = reactive({
   name: "",
   email: "",
   project: "",
+  turnstileToken: "",
 });
 const isSubmitting = ref(false);
 
@@ -77,6 +79,13 @@ const validate = (state: ContactFormState): ContactFormError[] => {
     errors.push({ name: "project", message: "Este campo es obligatorio" });
   }
 
+  if (!state.turnstileToken) {
+    errors.push({
+      name: "turnstileToken",
+      message: "Verificación de seguridad requerida",
+    });
+  }
+
   return errors;
 };
 
@@ -94,6 +103,7 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
         name: event.data.name,
         email: event.data.email,
         project: event.data.project,
+        turnstileToken: contactForm.turnstileToken,
       },
     });
 
@@ -111,6 +121,7 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
     contactForm.name = "";
     contactForm.email = "";
     contactForm.project = "";
+    contactForm.turnstileToken = "";
   } catch {
     const errorToast = cta.value.errorToast;
 
@@ -120,6 +131,8 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
         errorToast?.description || "Intentalo nuevamente en unos minutos.",
       color: "error",
     });
+    // Reset token on error too so user can retry
+    contactForm.turnstileToken = "";
   } finally {
     isSubmitting.value = false;
   }
@@ -201,6 +214,10 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
             :rows="4"
             class="w-full"
           />
+        </UFormField>
+
+        <UFormField name="turnstileToken" :error="undefined">
+          <NuxtTurnstile v-model="contactForm.turnstileToken" class="mt-2" />
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">

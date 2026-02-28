@@ -8,27 +8,62 @@ export default defineEventHandler(async (event) => {
     name?: string;
     email?: string;
     project?: string;
+    turnstileToken?: string;
   }>(event);
 
   const name = body?.name?.trim() || "";
   const email = body?.email?.trim() || "";
   const project = body?.project?.trim() || "";
+  const turnstileToken = body?.turnstileToken || "";
 
   if (!name || !email || !project) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Missing required fields"
+      statusMessage: "Missing required fields",
     });
   }
 
   if (!emailRegex.test(email)) {
     throw createError({
       statusCode: 400,
-      statusMessage: "Invalid email"
+      statusMessage: "Invalid email",
+    });
+  }
+
+  // Verify Turnstile token
+  if (!turnstileToken) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Security verification required",
     });
   }
 
   const config = useRuntimeConfig();
+
+  try {
+    const verifyResponse = await $fetch<{ success: boolean }>(
+      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
+      {
+        method: "POST",
+        body: {
+          secret: config.turnstile.secretKey,
+          response: turnstileToken,
+        },
+      },
+    );
+
+    if (!verifyResponse.success) {
+      throw createError({
+        statusCode: 403,
+        statusMessage: "Security verification failed",
+      });
+    }
+  } catch {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Security verification failed",
+    });
+  }
 
   if (
     !config.mailgunApiKey ||
@@ -38,14 +73,14 @@ export default defineEventHandler(async (event) => {
   ) {
     throw createError({
       statusCode: 500,
-      statusMessage: "Mailgun is not configured"
+      statusMessage: "Mailgun is not configured",
     });
   }
 
   const mailgun = new Mailgun(FormData);
   const client = mailgun.client({
     username: "api",
-    key: config.mailgunApiKey
+    key: config.mailgunApiKey,
   });
 
   try {
@@ -58,14 +93,14 @@ export default defineEventHandler(async (event) => {
         `Email: ${email}`,
         "",
         "Proyecto:",
-        project
+        project,
       ].join("\n"),
       html: `
         <h2>Nuevo contacto desde la web</h2>
         <p><strong>Nombre:</strong> ${name}</p>
         <p><strong>Email:</strong> ${email}</p>
         <p><strong>Proyecto:</strong><br/>${project.replace(/\n/g, "<br/>")}</p>
-      `
+      `,
     });
 
     return { ok: true };
@@ -74,7 +109,7 @@ export default defineEventHandler(async (event) => {
 
     throw createError({
       statusCode: 502,
-      statusMessage: "Email delivery failed"
+      statusMessage: "Email delivery failed",
     });
   }
 });
