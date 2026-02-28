@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { data: page } = await useAsyncData("index", () =>
+const { data: page } = await useAsyncData("home-content", () =>
   queryCollection("content").first(),
 );
 if (!page.value) {

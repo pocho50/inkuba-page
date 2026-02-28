@@ -60,9 +60,13 @@ const onContactSubmit = async () => {
       },
     });
 
+    const successToast = cta.value.successToast;
+
     toast.add({
-      title: cta.value.successToast.title,
-      description: cta.value.successToast.description,
+      title: successToast?.title || "Formulario enviado",
+      description:
+        successToast?.description ||
+        "Te contactaremos en menos de 24 horas hábiles.",
       color: "success",
     });
 
@@ -121,32 +125,36 @@ const onContactSubmit = async () => {
 
   <UModal
     v-model:open="isContactModalOpen"
-    :title="cta.modal.title"
-    :description="cta.modal.description"
+    :title="cta.modal?.title || cta.title"
+    :description="cta.modal?.description || cta.description"
   >
     <template #body>
       <form class="space-y-4" @submit.prevent="onContactSubmit">
-        <UFormField :label="cta.form.nameLabel" name="name" required>
+        <UFormField :label="cta.form?.nameLabel || ''" name="name" required>
           <UInput
             v-model="contactForm.name"
-            :placeholder="cta.form.namePlaceholder"
+            :placeholder="cta.form?.namePlaceholder || ''"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField :label="cta.form.emailLabel" name="email" required>
+        <UFormField :label="cta.form?.emailLabel || ''" name="email" required>
           <UInput
             v-model="contactForm.email"
             type="email"
-            :placeholder="cta.form.emailPlaceholder"
+            :placeholder="cta.form?.emailPlaceholder || ''"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField :label="cta.form.projectLabel" name="project" required>
+        <UFormField
+          :label="cta.form?.projectLabel || ''"
+          name="project"
+          required
+        >
           <UTextarea
             v-model="contactForm.project"
-            :placeholder="cta.form.projectPlaceholder"
+            :placeholder="cta.form?.projectPlaceholder || ''"
             :rows="4"
             class="w-full"
           />
@@ -154,14 +162,14 @@ const onContactSubmit = async () => {
 
         <div class="flex justify-end gap-2 pt-2">
           <UButton
-            :label="cta.form.cancelLabel"
+            :label="cta.form?.cancelLabel || ''"
             color="neutral"
             variant="ghost"
             :disabled="isSubmitting"
             @click="isContactModalOpen = false"
           />
           <UButton
-            :label="cta.form.submitLabel"
+            :label="cta.form?.submitLabel || ''"
             type="submit"
             :loading="isSubmitting"
             :disabled="isSubmitting"
