@@ -7,6 +7,10 @@
   --ui-primary: #e38443;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 .dark {
   --ui-primary: #e38443;
 }

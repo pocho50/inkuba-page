@@ -91,6 +91,7 @@ const onContactSubmit = async () => {
 
 <template>
   <UPageCTA
+    id="contact"
     :title="cta.title"
     :description="cta.description"
     variant="naked"
