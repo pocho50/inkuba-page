@@ -117,3 +117,6 @@ cta:
   successToast:
     title: Formulario enviado
     description: Te contactaremos en menos de 24 horas hábiles.
+  errorToast:
+    title: No pudimos enviar el formulario
+    description: Inténtalo nuevamente en unos minutos.

@@ -9,15 +9,11 @@ defineProps<{
     viewAllLabel: string;
     viewAllTo: string;
   };
-  articles: Array<{
-    path: string;
-    category: string;
-    date: string;
-    title: string;
-    description: string;
-    icon?: string;
-  }>;
 }>();
+
+const { data: articles } = await useAsyncData("home-blog", () =>
+  queryCollection("blog").order("date", "DESC").limit(3).all(),
+);
 </script>
 
 <template>
@@ -60,7 +56,9 @@ defineProps<{
           :style="{ '--blog-delay': `${index * 150}ms` }"
         >
           <div class="relative h-40 overflow-hidden bg-elevated">
-            <div class="absolute inset-0 flex items-center justify-center bg-primary/5">
+            <div
+              class="absolute inset-0 flex items-center justify-center bg-primary/5"
+            >
               <UIcon
                 :name="article.icon || 'i-lucide-file-text'"
                 class="size-14 text-primary/30 transition-transform duration-500 group-hover:scale-110 group-hover:text-primary/50"

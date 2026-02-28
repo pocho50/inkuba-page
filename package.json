@@ -17,6 +17,8 @@
     "@nuxt/image": "^2.0.0",
     "@nuxt/ui": "^4.4.0",
     "better-sqlite3": "^12.6.2",
+    "form-data": "^4.0.5",
+    "mailgun.js": "^12.7.0",
     "nuxt": "^4.3.0",
     "tailwindcss": "^4.1.18"
   },

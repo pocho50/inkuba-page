@@ -21,41 +21,17 @@ type HomeCta = {
     title: string;
     description: string;
   };
-};
-
-type HomeCtaInput = Partial<HomeCta> & {
-  links?: Array<{
-    label?: string;
-  }>;
+  errorToast?: {
+    title: string;
+    description: string;
+  };
 };
 
 const props = defineProps<{
-  cta: HomeCtaInput;
+  cta: HomeCta;
 }>();
 
-const normalizedCta = computed<HomeCta>(() => ({
-  title: props.cta?.title ?? "",
-  description: props.cta?.description ?? "",
-  buttonLabel: props.cta?.buttonLabel ?? props.cta?.links?.[0]?.label ?? "",
-  modal: {
-    title: props.cta?.modal?.title ?? "",
-    description: props.cta?.modal?.description ?? "",
-  },
-  form: {
-    nameLabel: props.cta?.form?.nameLabel ?? "",
-    namePlaceholder: props.cta?.form?.namePlaceholder ?? "",
-    emailLabel: props.cta?.form?.emailLabel ?? "",
-    emailPlaceholder: props.cta?.form?.emailPlaceholder ?? "",
-    projectLabel: props.cta?.form?.projectLabel ?? "",
-    projectPlaceholder: props.cta?.form?.projectPlaceholder ?? "",
-    cancelLabel: props.cta?.form?.cancelLabel ?? "",
-    submitLabel: props.cta?.form?.submitLabel ?? "",
-  },
-  successToast: {
-    title: props.cta?.successToast?.title ?? "",
-    description: props.cta?.successToast?.description ?? "",
-  },
-}));
+const cta = computed(() => props.cta);
 
 const isContactModalOpen = ref(false);
 const contactForm = reactive({
@@ -63,27 +39,56 @@ const contactForm = reactive({
   email: "",
   project: "",
 });
+const isSubmitting = ref(false);
 
 const toast = useToast();
 
-const onContactSubmit = () => {
-  toast.add({
-    title: normalizedCta.value.successToast.title,
-    description: normalizedCta.value.successToast.description,
-    color: "success",
-  });
+const onContactSubmit = async () => {
+  if (isSubmitting.value) {
+    return;
+  }
 
-  isContactModalOpen.value = false;
-  contactForm.name = "";
-  contactForm.email = "";
-  contactForm.project = "";
+  isSubmitting.value = true;
+
+  try {
+    await $fetch("/api/contact", {
+      method: "POST",
+      body: {
+        name: contactForm.name,
+        email: contactForm.email,
+        project: contactForm.project,
+      },
+    });
+
+    toast.add({
+      title: cta.value.successToast.title,
+      description: cta.value.successToast.description,
+      color: "success",
+    });
+
+    isContactModalOpen.value = false;
+    contactForm.name = "";
+    contactForm.email = "";
+    contactForm.project = "";
+  } catch {
+    const errorToast = cta.value.errorToast;
+
+    toast.add({
+      title: errorToast?.title || "No pudimos enviar el formulario",
+      description:
+        errorToast?.description || "Intentalo nuevamente en unos minutos.",
+      color: "error",
+    });
+  } finally {
+    isSubmitting.value = false;
+  }
 };
 </script>
 
 <template>
   <UPageCTA
-    :title="normalizedCta.title"
-    :description="normalizedCta.description"
+    :title="cta.title"
+    :description="cta.description"
     variant="naked"
     class="overflow-hidden @container"
   >
@@ -104,7 +109,7 @@ const onContactSubmit = () => {
 
     <template #links>
       <UButton
-        :label="normalizedCta.buttonLabel"
+        :label="cta.buttonLabel"
         size="lg"
         trailing-icon="i-lucide-arrow-right"
         @click="isContactModalOpen = true"
@@ -116,40 +121,32 @@ const onContactSubmit = () => {
 
   <UModal
     v-model:open="isContactModalOpen"
-    :title="normalizedCta.modal.title"
-    :description="normalizedCta.modal.description"
+    :title="cta.modal.title"
+    :description="cta.modal.description"
   >
     <template #body>
       <form class="space-y-4" @submit.prevent="onContactSubmit">
-        <UFormField :label="normalizedCta.form.nameLabel" name="name" required>
+        <UFormField :label="cta.form.nameLabel" name="name" required>
           <UInput
             v-model="contactForm.name"
-            :placeholder="normalizedCta.form.namePlaceholder"
+            :placeholder="cta.form.namePlaceholder"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField
-          :label="normalizedCta.form.emailLabel"
-          name="email"
-          required
-        >
+        <UFormField :label="cta.form.emailLabel" name="email" required>
           <UInput
             v-model="contactForm.email"
             type="email"
-            :placeholder="normalizedCta.form.emailPlaceholder"
+            :placeholder="cta.form.emailPlaceholder"
             class="w-full"
           />
         </UFormField>
 
-        <UFormField
-          :label="normalizedCta.form.projectLabel"
-          name="project"
-          required
-        >
+        <UFormField :label="cta.form.projectLabel" name="project" required>
           <UTextarea
             v-model="contactForm.project"
-            :placeholder="normalizedCta.form.projectPlaceholder"
+            :placeholder="cta.form.projectPlaceholder"
             :rows="4"
             class="w-full"
           />
@@ -157,12 +154,18 @@ const onContactSubmit = () => {
 
         <div class="flex justify-end gap-2 pt-2">
           <UButton
-            :label="normalizedCta.form.cancelLabel"
+            :label="cta.form.cancelLabel"
             color="neutral"
             variant="ghost"
+            :disabled="isSubmitting"
             @click="isContactModalOpen = false"
           />
-          <UButton :label="normalizedCta.form.submitLabel" type="submit" />
+          <UButton
+            :label="cta.form.submitLabel"
+            type="submit"
+            :loading="isSubmitting"
+            :disabled="isSubmitting"
+          />
         </div>
       </form>
     </template>

@@ -10,10 +10,6 @@ if (!page.value) {
   });
 }
 
-const { data: blogArticles } = await useAsyncData("home-blog", () =>
-  queryCollection("blog").order("date", "DESC").limit(3).all(),
-);
-
 useSeoMeta({
   title: page.value.seo?.title || page.value.title,
   ogTitle: page.value.seo?.title || page.value.title,
@@ -42,7 +38,7 @@ useSeoMeta({
 
     <USeparator :ui="{ border: 'border-primary/30' }" />
 
-    <HomeBlogSection :section="page.blog" :articles="blogArticles || []" />
+    <HomeBlogSection :section="page.blog" />
 
     <USeparator />
 

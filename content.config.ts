@@ -155,6 +155,7 @@ export const collections = {
           submitLabel: z.string().nonempty(),
         }),
         successToast: createBaseSchema(),
+        errorToast: createBaseSchema(),
       }),
     }),
   }),
