@@ -37,7 +37,12 @@ type ContactFormState = {
   name: string;
   email: string;
   project: string;
-  turnstileToken: string;
+  // Anti-spam: honeypot field (hidden, bots will fill it)
+  website: string;
+  // Anti-spam: math challenge answer
+  mathAnswer: string;
+  // Anti-spam: timestamp when form opened
+  formTimestamp: number;
 };
 
 type ContactFormError = {
@@ -51,16 +56,35 @@ type ContactFormSubmitEvent = {
 
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+// Generate simple math challenge (1-10 + 1-10)
+const num1 = ref(Math.floor(Math.random() * 10) + 1);
+const num2 = ref(Math.floor(Math.random() * 10) + 1);
+const mathQuestion = computed(() => `${num1.value} + ${num2.value}`);
+const expectedAnswer = computed(() => num1.value + num2.value);
+
 const isContactModalOpen = ref(false);
 const contactForm = reactive({
   name: "",
   email: "",
   project: "",
-  turnstileToken: "",
+  website: "", // honeypot - should remain empty
+  mathAnswer: "",
+  formTimestamp: 0,
 });
 const isSubmitting = ref(false);
 
 const toast = useToast();
+
+// Reset math challenge when modal opens
+watch(isContactModalOpen, (isOpen) => {
+  if (isOpen) {
+    num1.value = Math.floor(Math.random() * 10) + 1;
+    num2.value = Math.floor(Math.random() * 10) + 1;
+    contactForm.formTimestamp = Date.now();
+    contactForm.website = "";
+    contactForm.mathAnswer = "";
+  }
+});
 
 const validate = (state: ContactFormState): ContactFormError[] => {
   const errors: ContactFormError[] = [];
@@ -79,11 +103,10 @@ const validate = (state: ContactFormState): ContactFormError[] => {
     errors.push({ name: "project", message: "Este campo es obligatorio" });
   }
 
-  if (!state.turnstileToken) {
-    errors.push({
-      name: "turnstileToken",
-      message: "Verificación de seguridad requerida",
-    });
+  if (!state.mathAnswer) {
+    errors.push({ name: "mathAnswer", message: "Responde la verificación" });
+  } else if (Number(state.mathAnswer) !== expectedAnswer.value) {
+    errors.push({ name: "mathAnswer", message: "Respuesta incorrecta" });
   }
 
   return errors;
@@ -91,6 +114,28 @@ const validate = (state: ContactFormState): ContactFormError[] => {
 
 const onContactSubmit = async (event: ContactFormSubmitEvent) => {
   if (isSubmitting.value) {
+    return;
+  }
+
+  // Anti-spam checks (server will also validate)
+  const fillTime = Date.now() - event.data.formTimestamp;
+  if (fillTime < 3000) {
+    // Less than 3 seconds = likely bot
+    toast.add({
+      title: "Error",
+      description: "Por favor, toma tu tiempo para completar el formulario.",
+      color: "error",
+    });
+    return;
+  }
+
+  if (event.data.website) {
+    // Honeypot triggered - silently fail to not tip off bots
+    toast.add({
+      title: "Error",
+      description: "No pudimos enviar el formulario. Intenta nuevamente.",
+      color: "error",
+    });
     return;
   }
 
@@ -103,7 +148,10 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
         name: event.data.name,
         email: event.data.email,
         project: event.data.project,
-        turnstileToken: contactForm.turnstileToken,
+        website: event.data.website,
+        mathAnswer: parseInt(event.data.mathAnswer),
+        expectedAnswer: expectedAnswer.value,
+        formTimestamp: event.data.formTimestamp,
       },
     });
 
@@ -121,7 +169,9 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
     contactForm.name = "";
     contactForm.email = "";
     contactForm.project = "";
-    contactForm.turnstileToken = "";
+    contactForm.website = "";
+    contactForm.mathAnswer = "";
+    contactForm.formTimestamp = 0;
   } catch {
     const errorToast = cta.value.errorToast;
 
@@ -131,8 +181,6 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
         errorToast?.description || "Intentalo nuevamente en unos minutos.",
       color: "error",
     });
-    // Reset token on error too so user can retry
-    contactForm.turnstileToken = "";
   } finally {
     isSubmitting.value = false;
   }
@@ -186,6 +234,15 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
         class="space-y-4"
         @submit="onContactSubmit"
       >
+        <!-- Honeypot: hidden field for bots -->
+        <div class="hidden" aria-hidden="true">
+          <UInput
+            v-model="contactForm.website"
+            tabindex="-1"
+            autocomplete="off"
+          />
+        </div>
+
         <UFormField :label="cta.form?.nameLabel || ''" name="name" required>
           <UInput
             v-model="contactForm.name"
@@ -216,8 +273,18 @@ const onContactSubmit = async (event: ContactFormSubmitEvent) => {
           />
         </UFormField>
 
-        <UFormField name="turnstileToken" :error="undefined">
-          <NuxtTurnstile v-model="contactForm.turnstileToken" class="mt-2" />
+        <!-- Math challenge anti-spam -->
+        <UFormField
+          :label="`Verificación: ¿Cuánto es ${mathQuestion}?`"
+          name="mathAnswer"
+          required
+        >
+          <UInput
+            v-model="contactForm.mathAnswer"
+            type="number"
+            placeholder="Escribe el resultado"
+            class="w-full"
+          />
         </UFormField>
 
         <div class="flex justify-end gap-2 pt-2">

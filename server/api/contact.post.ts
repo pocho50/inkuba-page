@@ -8,13 +8,20 @@ export default defineEventHandler(async (event) => {
     name?: string;
     email?: string;
     project?: string;
-    turnstileToken?: string;
+    // Anti-spam fields
+    website?: string;
+    mathAnswer?: number;
+    expectedAnswer?: number;
+    formTimestamp?: number;
   }>(event);
 
   const name = body?.name?.trim() || "";
   const email = body?.email?.trim() || "";
   const project = body?.project?.trim() || "";
-  const turnstileToken = body?.turnstileToken || "";
+  const website = body?.website || "";
+  const mathAnswer = body?.mathAnswer || 0;
+  const expectedAnswer = body?.expectedAnswer || 0;
+  const formTimestamp = body?.formTimestamp || 0;
 
   if (!name || !email || !project) {
     throw createError({
@@ -30,40 +37,32 @@ export default defineEventHandler(async (event) => {
     });
   }
 
-  // Verify Turnstile token
-  if (!turnstileToken) {
+  // Anti-spam: Honeypot check
+  if (website) {
     throw createError({
-      statusCode: 400,
-      statusMessage: "Security verification required",
+      statusCode: 403,
+      statusMessage: "Invalid request",
     });
   }
 
-  const config = useRuntimeConfig();
+  // Anti-spam: Time check (minimum 3 seconds to fill form)
+  const fillTime = Date.now() - formTimestamp;
+  if (fillTime < 3000) {
+    throw createError({
+      statusCode: 403,
+      statusMessage: "Form submitted too quickly",
+    });
+  }
 
-  try {
-    const verifyResponse = await $fetch<{ success: boolean }>(
-      "https://challenges.cloudflare.com/turnstile/v0/siteverify",
-      {
-        method: "POST",
-        body: {
-          secret: config.turnstile.secretKey,
-          response: turnstileToken,
-        },
-      },
-    );
-
-    if (!verifyResponse.success) {
-      throw createError({
-        statusCode: 403,
-        statusMessage: "Security verification failed",
-      });
-    }
-  } catch {
+  // Anti-spam: Math challenge verification
+  if (mathAnswer !== expectedAnswer) {
     throw createError({
       statusCode: 403,
       statusMessage: "Security verification failed",
     });
   }
+
+  const config = useRuntimeConfig();
 
   if (
     !config.mailgunApiKey ||

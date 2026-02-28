@@ -1,12 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  modules: [
-    "@nuxt/eslint",
-    "@nuxt/image",
-    "@nuxt/ui",
-    "@nuxt/content",
-    "@nuxtjs/turnstile",
-  ],
+  modules: ["@nuxt/eslint", "@nuxt/image", "@nuxt/ui", "@nuxt/content"],
 
   devtools: {
     enabled: true,
@@ -32,13 +26,6 @@ export default defineNuxtConfig({
     mailgunDomain: "",
     mailgunFrom: "",
     mailgunTo: "",
-    turnstile: {
-      secretKey: "",
-    },
-  },
-
-  turnstile: {
-    siteKey: "",
   },
 
   compatibilityDate: "2025-01-15",
