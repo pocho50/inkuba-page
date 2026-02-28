@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { formatInlineTitle } from "~/utils/formatInlineTitle";
+
 const { data: page } = await useAsyncData("index", () =>
   queryCollection("content").first(),
 );
@@ -55,7 +57,7 @@ useSeoMeta({
       reverse
     >
       <template #title>
-        <MDC :value="page?.section?.title || ''" tag="span" unwrap="p" />
+        <span v-html="formatInlineTitle(page?.section?.title)" />
       </template>
 
       <template #description>
@@ -102,7 +104,7 @@ useSeoMeta({
       </template>
 
       <template #title>
-        <MDC :value="page?.vuenuxt?.title || ''" tag="span" unwrap="p" />
+        <span v-html="formatInlineTitle(page?.vuenuxt?.title)" />
       </template>
 
       <template #description>
@@ -185,11 +187,9 @@ useSeoMeta({
       </template>
 
       <template #title>
-        <MDC
-          :value="page?.ai?.title || ''"
-          tag="span"
-          unwrap="p"
+        <span
           class="*:leading-9 *:my-0"
+          v-html="formatInlineTitle(page?.ai?.title)"
         />
       </template>
 
@@ -234,7 +234,7 @@ useSeoMeta({
       </template>
 
       <template #title>
-        <MDC :value="page?.blog?.title || ''" tag="span" unwrap="p" />
+        <span v-html="formatInlineTitle(page?.blog?.title)" />
       </template>
 
       <template #description>
