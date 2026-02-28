@@ -1,7 +1,7 @@
 ---
 title: "Implementando un Chat con IA en Nuxt usando Vercel AI Gateway"
 description: "Este tutorial te muestra cómo implementar un asistente de IA en Nuxt 4 usando Vercel AI SDK y Vercel AI Gateway. Si estás pensando en añadir inteligencia artificial a tu proyecto, esta guía te dará una visión general clara de cómo hacerlo."
-date: "2025-12-15"
+date: "15 de diciembre de 2025"
 category: "Inteligencia Artificial"
 icon: "i-lucide-brain-circuit"
 image: "/images/blog/ai-gateway.png"

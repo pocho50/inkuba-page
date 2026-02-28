@@ -1,7 +1,7 @@
 ---
 title: "Cómo usar WebSockets con Nuxt: guía práctica"
 description: "Aprende a implementar comunicación en tiempo real con Nuxt usando defineWebSocketHandler en el servidor y useWebSocket en el cliente."
-date: "2026-02-28"
+date: "28 de febrero de 2026"
 category: "Nuxt"
 icon: "i-lucide-radio-tower"
 image: "/images/blog/websocket-nuxt.png"
@@ -122,7 +122,9 @@ export function useWsTasks(callback?: WsTasksCallback) {
 
   if (!import.meta.client) {
     return {
-      sendData: (_message: string) => false,
+      sendData: (_message: string) => {
+        return false;
+      },
       lastUpdate,
       wsStatus: ref("CLOSED"),
     };
@@ -145,9 +147,10 @@ export function useWsTasks(callback?: WsTasksCallback) {
     }
   });
 
-  function sendData(message: string) {
+  function sendData(message: string): boolean {
     lastUpdate.value = message;
     send(message);
+    return true;
   }
 
   return {
