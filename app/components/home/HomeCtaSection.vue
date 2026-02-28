@@ -33,6 +33,23 @@ const props = defineProps<{
 
 const cta = computed(() => props.cta);
 
+type ContactFormState = {
+  name: string;
+  email: string;
+  project: string;
+};
+
+type ContactFormError = {
+  name: keyof ContactFormState;
+  message: string;
+};
+
+type ContactFormSubmitEvent = {
+  data: ContactFormState;
+};
+
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const isContactModalOpen = ref(false);
 const contactForm = reactive({
   name: "",
@@ -43,7 +60,27 @@ const isSubmitting = ref(false);
 
 const toast = useToast();
 
-const onContactSubmit = async () => {
+const validate = (state: ContactFormState): ContactFormError[] => {
+  const errors: ContactFormError[] = [];
+
+  if (!state.name.trim()) {
+    errors.push({ name: "name", message: "Este campo es obligatorio" });
+  }
+
+  if (!state.email.trim()) {
+    errors.push({ name: "email", message: "Este campo es obligatorio" });
+  } else if (!emailRegex.test(state.email)) {
+    errors.push({ name: "email", message: "Email inválido" });
+  }
+
+  if (!state.project.trim()) {
+    errors.push({ name: "project", message: "Este campo es obligatorio" });
+  }
+
+  return errors;
+};
+
+const onContactSubmit = async (event: ContactFormSubmitEvent) => {
   if (isSubmitting.value) {
     return;
   }
@@ -54,9 +91,9 @@ const onContactSubmit = async () => {
     await $fetch("/api/contact", {
       method: "POST",
       body: {
-        name: contactForm.name,
-        email: contactForm.email,
-        project: contactForm.project,
+        name: event.data.name,
+        email: event.data.email,
+        project: event.data.project,
       },
     });
 
@@ -130,7 +167,12 @@ const onContactSubmit = async () => {
     :description="cta.modal?.description || cta.description"
   >
     <template #body>
-      <form class="space-y-4" @submit.prevent="onContactSubmit">
+      <UForm
+        :state="contactForm"
+        :validate="validate"
+        class="space-y-4"
+        @submit="onContactSubmit"
+      >
         <UFormField :label="cta.form?.nameLabel || ''" name="name" required>
           <UInput
             v-model="contactForm.name"
@@ -176,7 +218,7 @@ const onContactSubmit = async () => {
             :disabled="isSubmitting"
           />
         </div>
-      </form>
+      </UForm>
     </template>
   </UModal>
 </template>
