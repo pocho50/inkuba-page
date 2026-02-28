@@ -20,11 +20,12 @@ const props = defineProps<{
           <HeroImage :src="props.image" :alt="props.title" />
         </div>
         <div class="text-center lg:text-left max-w-[600px]">
-          <div
+          <MDC
+            :value="props.title"
+            unwrap="p"
+            tag="h1"
             class="mx-auto max-w-3xl text-4xl font-semibold tracking-tight sm:text-5xl lg:mx-0 lg:text-6xl [&_p]:m-0"
-          >
-            <MDC :value="props.title" unwrap="p" />
-          </div>
+          />
 
           <p
             v-if="props.description"

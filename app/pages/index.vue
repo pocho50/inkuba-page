@@ -44,6 +44,7 @@ useSeoMeta({
 
     <UPageSection
       id="tech-section"
+      :title="page.section.title"
       :description="page.section.description"
       :features="page.section.features"
       orientation="horizontal"
@@ -54,7 +55,7 @@ useSeoMeta({
       reverse
     >
       <template #title>
-        <MDC :value="page?.section?.title || ''" class="sm:*:leading-11" />
+        <MDC :value="page?.section?.title || ''" tag="span" unwrap="p" />
       </template>
 
       <template #description>
@@ -75,6 +76,7 @@ useSeoMeta({
 
     <UPageSection
       id="vuenuxt"
+      :title="page.vuenuxt.title"
       class="relative overflow-hidden"
       :ui="{
         title: 'text-left',
@@ -85,21 +87,22 @@ useSeoMeta({
         class="absolute -right-20 top-1/3 size-[400px] rounded-full bg-primary/10 blur-[150px]"
       />
 
-      <template #title>
-        <div class="flex flex-col gap-5">
-          <div class="flex items-center gap-4">
-            <UIcon
-              name="i-simple-icons-vuedotjs"
-              class="size-10 text-[#4FC08D] transition-transform duration-500 hover:rotate-12"
-            />
-            <UIcon name="i-lucide-plus" class="size-4 text-muted" />
-            <UIcon
-              name="i-simple-icons-nuxtdotjs"
-              class="size-10 text-[#00DC82] transition-transform duration-500 hover:rotate-12"
-            />
-          </div>
-          <MDC :value="page?.vuenuxt?.title || ''" class="*:leading-9 *:my-0" />
+      <template #headline>
+        <div class="flex items-center gap-4">
+          <UIcon
+            name="i-simple-icons-vuedotjs"
+            class="size-10 text-[#4FC08D] transition-transform duration-500 hover:rotate-12"
+          />
+          <UIcon name="i-lucide-plus" class="size-4 text-muted" />
+          <UIcon
+            name="i-simple-icons-nuxtdotjs"
+            class="size-10 text-[#00DC82] transition-transform duration-500 hover:rotate-12"
+          />
         </div>
+      </template>
+
+      <template #title>
+        <MDC :value="page?.vuenuxt?.title || ''" tag="span" unwrap="p" />
       </template>
 
       <template #description>
@@ -153,6 +156,7 @@ useSeoMeta({
 
     <UPageSection
       id="ai"
+      :title="page.ai.title"
       class="relative overflow-hidden"
       :ui="{
         title: 'text-left @container relative',
@@ -170,9 +174,7 @@ useSeoMeta({
         style="animation-delay: 1s"
       />
 
-      <template #title>
-        <MDC :value="page?.ai?.title || ''" class="*:leading-9 *:my-0" />
-
+      <template #headline>
         <div class="hidden @min-[1020px]:block">
           <UColorModeImage
             light="/images/light/line-2.svg"
@@ -180,6 +182,15 @@ useSeoMeta({
             class="absolute top-0 right-0 size-full scale-95 translate-x-[70%]"
           />
         </div>
+      </template>
+
+      <template #title>
+        <MDC
+          :value="page?.ai?.title || ''"
+          tag="span"
+          unwrap="p"
+          class="*:leading-9 *:my-0"
+        />
       </template>
 
       <template #description>
@@ -208,6 +219,7 @@ useSeoMeta({
 
     <UPageSection
       id="blog"
+      :title="page.blog.title"
       class="relative overflow-hidden"
       :ui="{
         description: 'text-left sm:text-center',
@@ -220,8 +232,9 @@ useSeoMeta({
           class="absolute -top-10 sm:top-0 right-1/2 h-24"
         />
       </template>
+
       <template #title>
-        <MDC :value="page?.blog?.title || ''" />
+        <MDC :value="page?.blog?.title || ''" tag="span" unwrap="p" />
       </template>
 
       <template #description>
@@ -298,9 +311,7 @@ useSeoMeta({
       variant="naked"
       class="overflow-hidden @container"
     >
-      <template #title>
-        <MDC :value="page?.cta?.title || ''" />
-
+      <template #headline>
         <div class="@max-[1280px]:hidden">
           <UColorModeImage
             light="/images/light/line-6.svg"

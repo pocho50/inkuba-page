@@ -22,15 +22,26 @@ Antes de entrar en código, hablemos de **Vercel AI Gateway**. Es un servicio qu
 
 ## Arquitectura General
 
-El sistema tiene tres partes principales:
+El sistema tiene cuatro partes principales:
 
 1. **El servidor** (`/server/api/chat.ts`): Donde se procesan los mensajes y se definen las herramientas
 2. **La interfaz** (`/app/pages/ia.vue`): El chat donde el usuario interactúa
 3. **Las herramientas** (`/shared/utils/tools/`): Funciones especiales que la IA puede usar
+4. **Componentes Personalizados** (`/app/components/Tools/`): Componentes Vue que renderizan el resultado de cada herramienta
 
 ---
 
-## Paso 1: Configuración del Servidor
+## Prerrequisitos
+
+Antes de empezar, necesitás registrarte en dos servicios:
+
+1. **Vercel AI Gateway**: Creá una cuenta en [Vercel](https://vercel.com) para poder obtener el API key del AI Gateway.
+
+2. **API Ninjas**: Para el ejemplo práctico de este tutorial vamos a usar una API externa de horóscopos. Registrate en [https://api-ninjas.com/](https://api-ninjas.com/) y obtené tu API key.
+
+---
+
+## Configuración del Servidor
 
 Vamos al corazón del sistema: el endpoint de chat. Se usa el SDK de Vercel que facilita enormemente el streaming de respuestas.
 
@@ -38,24 +49,28 @@ Vamos al corazón del sistema: el endpoint de chat. Se usa el SDK de Vercel que 
 
 ```typescript
 // /server/api/chat.ts
-import { streamText, createGateway, tool, UIMessage } from "ai";
+import { streamText, UIMessage, createGateway, stepCountIs } from "ai";
+import { horoscopeTool } from "../../shared/utils/tools/horoscopeTool";
 
 export default defineLazyEventHandler(async () => {
-  // 1. Se crea el gateway con la API key
-  const apiKey = useRuntimeConfig().aiGatewayApiKey;
+  const apiKey = useRuntimeConfig().aiGatewayApiKey; // debes configurar esta variable en tu .env, mas info https://nuxt.com/docs/4.x/api/composables/use-runtime-config
+
+  if (!apiKey) throw new Error("Missing AI Gateway API key");
+
   const gateway = createGateway({ apiKey });
+  const model = gateway("anthropic/claude-sonnet-4-20250514");
 
-  // 2. Se define el modelo que se usará
-  const model = gateway("anthropic/claude-opus-4.5");
-
-  // 3. Retornamos el handler que procesa las peticiones
   return defineEventHandler(async (event) => {
     const { messages }: { messages: UIMessage[] } = await readBody(event);
 
     const result = streamText({
       model,
-      system: "Eres un asistente útil...",
+      system: "Eres un asistente útil.",
       messages,
+      tools: {
+        horoscopeTool,
+      },
+      stopWhen: stepCountIs(8),
     });
 
     return result.toUIMessageStreamResponse();
@@ -67,75 +82,68 @@ export default defineLazyEventHandler(async () => {
 
 El método `streamText` permite que la respuesta llegue palabra por palabra al usuario, en lugar de esperar a que todo el texto se genere. Esto crea una experiencia mucho más fluida y natural.
 
+### ¿Qué hace `stopWhen: stepCountIs(8)`?
+
+Limita la cantidad de pasos que la IA puede ejecutar en una sola respuesta. Esto evita bucles infinitos si la IA decide llamar herramientas repetidamente.
+
 ---
 
-## Paso 2: Las Herramientas (Tools)
+## Las Herramientas (Tools)
 
 Aquí viene lo interesante. La IA no solo responde preguntas, **puede ejecutar acciones**. Se definen "herramientas" que la IA puede invocar según necesite.
 
-### Ejemplo: Crear un gráfico
+### Ejemplo: Consultar el horóscopo
+
+Vamos a crear una herramienta que consulta el horóscopo diario usando la API de API Ninjas:
 
 ```typescript
-// /shared/utils/tools/chartLineTool.ts
+// /shared/utils/tools/horoscopeTool.ts
 import { tool } from "ai";
-import { z } from "zod";
 import type { UIToolInvocation } from "ai";
+import { z } from "zod";
 
-export type ChartUIToolInvocation = UIToolInvocation<typeof chartLineTool>;
+export type HoroscopeUIToolInvocation = UIToolInvocation<typeof horoscopeTool>;
 
-export const chartLineTool = tool({
-  description:
-    "Create a line chart visualization with one or multiple data series. Use this tool to display time-series data, trends, or comparisons between different metrics over time.",
+type HoroscopeOutput = {
+  date: string;
+  sign: string;
+  horoscope: string;
+};
+
+export const horoscopeTool = tool({
+  description: "Returns the daily horoscope for a specific zodiac sign.",
   inputSchema: z.object({
-    title: z.string().optional().describe("Title of the chart"),
-    data: z
-      .array(z.record(z.string(), z.union([z.string(), z.number()])))
-      .min(1)
-      .describe(
-        "REQUIRED: Array of data points (minimum 1 point). Each object must contain the xKey property and all series keys",
-      ),
-    xKey: z
-      .string()
-      .describe(
-        'The property name in data objects to use for x-axis values (e.g., "month", "date")',
-      ),
-    series: z
-      .array(
-        z.object({
-          key: z
-            .string()
-            .describe(
-              "The property name in data objects for this series (must exist in all data points)",
-            ),
-          name: z
-            .string()
-            .describe("Display name for this series in the legend"),
-          color: z
-            .string()
-            .describe(
-              'Hex color code for this line (e.g., "#3b82f6" for blue, "#10b981" for green)',
-            ),
-        }),
-      )
-      .min(1)
-      .describe(
-        "Array of series configurations (minimum 1 series). Each series represents one line on the chart",
-      ),
-    xLabel: z.string().optional().describe("Optional label for x-axis"),
-    yLabel: z.string().optional().describe("Optional label for y-axis"),
+    zodiac: z
+      .literal([
+        "aries",
+        "taurus",
+        "gemini",
+        "cancer",
+        "leo",
+        "virgo",
+        "libra",
+        "scorpio",
+        "sagittarius",
+        "capricorn",
+        "aquarius",
+        "pisces",
+      ])
+      .describe("The zodiac sign to get a horoscope for."),
   }),
-  execute: async ({ title, data, xKey, series, xLabel, yLabel }) => {
-    // Create a delay to simulate the input-available state
-    await new Promise((resolve) => setTimeout(resolve, 1500));
+  execute: async ({ zodiac }: { zodiac: string }) => {
+    const url = `https://api.api-ninjas.com/v1/horoscope?zodiac=${zodiac}`;
 
-    return {
-      title,
-      data,
-      xKey,
-      series,
-      xLabel,
-      yLabel,
-    };
+    try {
+      const data: HoroscopeOutput = await $fetch(url, {
+        headers: {
+          "X-Api-Key": "YOUR_API_NINJAS_KEY", // idealmente deberías obtener esto de una variable de entorno
+        },
+      });
+
+      return data;
+    } catch (error) {
+      throw new Error(`Failed to fetch horoscope: ${String(error)}`);
+    }
   },
 });
 ```
@@ -143,31 +151,14 @@ export const chartLineTool = tool({
 ### ¿Cómo funciona?
 
 1. **Descripción clara**: Se le dice a la IA cuándo debe usar esta herramienta
-2. **Validación con Zod**: Se definen qué datos se esperan
-3. **Ejecución segura**: La función recibe datos validados y retorna el resultado
+2. **Validación con Zod**: Se definen qué datos se esperan (en este caso, un signo zodiacal válido usando `z.literal()` con un array de valores permitidos)
+3. **Ejecución segura**: La función recibe datos validados, consulta la API externa y retorna el resultado
 
-### Configuración en el endpoint:
-
-```typescript
-const result = streamText({
-  model,
-  system: "Eres un asistente útil...",
-  messages,
-
-  // Se registran las herramientas disponibles
-  tools: {
-    chartLineTool,
-    // ... más herramientas
-  },
-
-  // Se limitan los pasos para evitar bucles infinitos
-  stopWhen: stepCountIs(8),
-});
-```
+La IA lee la descripción y el schema, y decide por sí sola cuándo invocar la herramienta. Si el usuario pregunta "¿Cuál es mi horóscopo? Soy Leo", la IA llamará automáticamente a `horoscopeTool` con `zodiac: "leo"`.
 
 ---
 
-## Paso 3: La Interfaz de Usuario con Nuxt UI
+## La Interfaz de Usuario con Nuxt UI
 
 Para el frontend, no es necesario construir todo desde cero. Se puede aprovechar **Nuxt UI**, una librería de componentes que incluye componentes específicos para chat con IA.
 
@@ -182,14 +173,16 @@ Para el frontend, no es necesario construir todo desde cero. Se puede aprovechar
 
 Sin este componente, habría que implementar manualmente toda la lógica de streaming, scroll y formateo de mensajes.
 
-### Código del componente:
+### Código de la página:
 
 ```vue
 <!-- /app/pages/ia.vue -->
 <script setup lang="ts">
 import { Chat } from "@ai-sdk/vue";
+import type { UIMessage } from "ai";
+import type { HoroscopeUIToolInvocation } from "~~/shared/utils/tools/horoscopeTool";
 
-const messages = ref([]);
+const messages: UIMessage[] = [];
 const input = ref("");
 const chat = new Chat({ messages });
 
@@ -204,37 +197,104 @@ const onSubmit = (e: Event) => {
 </script>
 
 <template>
-  <div class="chat-container">
-    <!-- Lista de mensajes -->
-    <UChatMessages :messages="chat.messages" :status="chat.status">
+  <div class="flex h-screen flex-col overflow-hidden pt-5">
+    <UChatMessages
+      :messages="chat.messages"
+      :status="chat.status"
+      class="flex-1 min-h-0 overflow-y-auto pb-6"
+    >
       <template #content="{ message }">
-        <!-- Iterar sobre las partes del mensaje -->
-        <template v-for="part in message.parts" :key="part.type">
-          <!-- Texto normal -->
-          <MDC v-if="part.type === 'text'" :value="part.text" />
-
-          <!-- Gráfico de líneas -->
-          <ToolsChartLine
-            v-else-if="part.type === 'tool-chartLineTool'"
-            :invocation="part"
+        <template
+          v-for="(part, index) in message.parts"
+          :key="`${message.id}-${part.type}-${index}`"
+        >
+          <!-- Texto del asistente -->
+          <MDC
+            v-if="part.type === 'text' && message.role === 'assistant'"
+            :value="part.text"
           />
 
-          <!-- Otros tools... -->
+          <!-- Texto del usuario -->
+          <p
+            v-else-if="part.type === 'text' && message.role === 'user'"
+            class="whitespace-pre-wrap"
+          >
+            {{ part.text }}
+          </p>
+
+          <!-- Horóscopo -->
+          <ToolsHoroscope
+            v-else-if="part.type === 'tool-horoscopeTool'"
+            :invocation="part as HoroscopeUIToolInvocation"
+          />
         </template>
       </template>
     </UChatMessages>
 
-    <!-- Input del usuario -->
-    <UChatPrompt v-model="input" @submit="onSubmit">
-      <UChatPromptSubmit
-        :status="chat.status"
-        @stop="chat.stop()"
-        @reload="chat.regenerate()"
-      />
-    </UChatPrompt>
+    <div class="sticky bottom-5 p-4">
+      <UChatPrompt
+        v-model="input"
+        placeholder="Escribe tu mensaje"
+        :error="chat.error"
+        @submit="onSubmit"
+      >
+        <UChatPromptSubmit
+          :status="chat.status"
+          @stop="chat.stop()"
+          @reload="chat.regenerate()"
+        />
+      </UChatPrompt>
+    </div>
   </div>
 </template>
 ```
+
+### El componente personalizado del horóscopo
+
+Cuando la IA invoca `horoscopeTool`, el frontend recibe el resultado como una "parte" del mensaje con `type: 'tool-horoscopeTool'`. Necesitamos un componente que renderice ese resultado:
+
+```vue
+<!-- /app/components/Tools/Horoscope.vue -->
+<script setup lang="ts">
+import type { HoroscopeUIToolInvocation } from "~~/shared/utils/tools/horoscopeTool";
+
+const props = defineProps<{
+  invocation: HoroscopeUIToolInvocation;
+}>();
+</script>
+
+<template>
+  <!-- Loading state -->
+  <div
+    v-if="invocation.state !== 'output-available'"
+    class="my-5 rounded-xl bg-muted px-5 py-6 flex items-center justify-center"
+  >
+    <UIcon name="i-lucide-loader-circle" class="size-6 animate-spin mr-2" />
+    <span class="text-sm">Consultando los astros...</span>
+  </div>
+
+  <!-- Result -->
+  <div v-else class="my-5 rounded-xl border border-default bg-elevated/40 p-5">
+    <div class="flex items-center gap-2 mb-3">
+      <UIcon name="i-lucide-sparkles" class="size-5 text-primary" />
+      <h3 class="text-base font-semibold text-highlighted capitalize">
+        {{ invocation.output.sign }}
+      </h3>
+      <span class="text-xs text-muted ml-auto">
+        {{ invocation.output.date }}
+      </span>
+    </div>
+    <p class="text-sm text-muted leading-relaxed">
+      {{ invocation.output.horoscope }}
+    </p>
+  </div>
+</template>
+```
+
+El componente maneja dos estados:
+
+- **Cargando**: Mientras la herramienta se ejecuta, muestra un spinner con el mensaje "Consultando los astros..."
+- **Resultado**: Cuando la respuesta llega, muestra una card con el signo, la fecha y el texto del horóscopo
 
 ### ¿Qué hace la clase `Chat`?
 
@@ -245,15 +305,6 @@ El SDK de Vue proporciona una clase `Chat` que maneja todo el estado:
 - **`chat.sendMessage()`**: Envía un nuevo mensaje
 - **`chat.stop()`**: Detiene la generación
 - **`chat.regenerate()`**: Reintenta la última respuesta
-
-### UChatPrompt: el input inteligente
-
-Además de `UChatMessages`, se usa `UChatPrompt` que ofrece:
-
-- **Input de texto** con placeholder personalizable
-- **Botón de enviar** que se adapta al estado (enviar/stop/regenerar)
-- **Manejo de errores**: Muestra mensajes de error del chat
-- **Accesibilidad**: Navegación con teclado lista para usar
 
 ### Resumen de componentes Nuxt UI utilizados:
 
@@ -269,15 +320,17 @@ Gracias a Nuxt UI, se puede implementar toda la interfaz en menos de 100 líneas
 
 ## Flujo de Funcionamiento
 
-1. **Usuario escribe**: "Muestrame las reservas de este mes en un gráfico"
+1. **Usuario escribe**: "¿Cuál es mi horóscopo? Soy Aries"
 
 2. **Frontend envía**: El mensaje va al endpoint `/api/chat`
 
 3. **IA procesa**: Claude recibe el mensaje y decide qué hacer
 
-4. **Tool invocation**: La IA decide llamar a `chartLineTool` para crear el gráfico
+4. **Tool invocation**: La IA decide llamar a `horoscopeTool` con `zodiac: "aries"`
 
-5. **Respuesta al usuario**: El frontend recibe el resultado y renderiza el gráfico
+5. **API externa**: La herramienta consulta API Ninjas y devuelve el horóscopo
+
+6. **Respuesta al usuario**: El frontend recibe el resultado y renderiza la card del horóscopo
 
 ---
 
@@ -287,6 +340,7 @@ Implementar un chat con IA en Nuxt usando Vercel AI Gateway es sorprendentemente
 
 1. **Configuras el gateway** una vez
 2. **Defines herramientas** para las acciones que necesitas
-3. **Usas componentes Vue** que ya manejan el streaming
+3. **Creas componentes Vue** para renderizar los resultados
+4. **Usas los componentes de Nuxt UI** que ya manejan el streaming
 
-El resultado es un asistente inteligente que no solo conversa, **actúa**: por ejemplo puede generar gráficos, exportar archivos, enviar emails, etc. Las posibilidades son infinitas.
+El resultado es un asistente inteligente que no solo conversa, **actúa**: consulta APIs externas, muestra resultados con componentes personalizados y mantiene una conversación fluida gracias al streaming. A partir de aquí, podés agregar más herramientas (gráficos, envío de emails, exportación de archivos, etc.). La posibilidades son infinitas.
