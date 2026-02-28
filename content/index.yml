@@ -30,27 +30,27 @@ section:
       class: border-l border-default hover:border-primary pt-4 pl-4 py-2 transition-colors
 vuenuxt:
   title: "¿Por qué elegimos [Vue & Nuxt]{.text-primary}?"
-  description: "No es solo una preferencia técnica. Vue y Nuxt son el corazón de nuestro stack porque nos permiten entregar productos excepcionales en menos tiempo, con mejor rendimiento y una experiencia de desarrollo superior."
+  description: "La decisión está basada en capacidades concretas de Nuxt documentadas oficialmente: estrategias de renderizado flexibles, servidor Nitro integrado y una experiencia full-stack con menos configuración manual."
   reasons:
-    - title: Rendimiento excepcional
-      description: "Nuxt genera páginas ultrarrápidas con Server-Side Rendering (SSR) y Static Site Generation (SSG). Tus usuarios obtienen tiempos de carga mínimos y Google te premia con mejor posicionamiento SEO."
+    - title: Renderizado flexible por ruta
+      description: "Nuxt soporta renderizado universal, client-side, híbrido y edge. Además permite ajustar la estrategia por ruta con route rules según el tipo de página y necesidad de caché."
       icon: i-lucide-zap
-    - title: Experiencia de desarrollo ágil
-      description: "Vue ofrece una curva de aprendizaje suave y un ecosistema maduro. Esto se traduce en desarrollo más rápido, menos bugs y costos reducidos para tu proyecto."
+    - title: Nitro integrado y listo para serverless
+      description: "El motor Nitro aporta soporte cross-platform, rutas API y despliegue serverless sin arquitectura paralela. Frontend y backend conviven en el mismo proyecto con una salida de build portable."
       icon: i-lucide-rocket
-    - title: Ecosistema completo
-      description: "Desde Nuxt UI para interfaces profesionales hasta Nitro para APIs serverless, el ecosistema cubre todo lo que necesitamos sin dependencias externas innecesarias."
+    - title: Menos boilerplate con auto-imports
+      description: "Nuxt auto-importa componentes, composables y utilidades con tipado e IntelliSense, e incluye en producción solo lo que se usa. Esto reduce código repetitivo y errores de importación."
       icon: i-lucide-puzzle
-    - title: SEO de fábrica
-      description: "A diferencia de otros frameworks SPA, Nuxt renderiza HTML en el servidor. Los buscadores indexan tu contenido perfectamente, sin trucos ni configuraciones complejas."
+    - title: BFF eficiente con cache en endpoints
+      description: "Con Nitro implementamos una capa BFF en el mismo proyecto, centralizando integración con APIs externas, normalización de datos y estrategias de cache por endpoint para reducir latencia y costo operativo."
       icon: i-lucide-search
   highlights:
-    - label: "200k+"
-      description: "Componentes de iconos disponibles"
-    - label: "SSR + SSG"
-      description: "Renderizado híbrido flexible"
-    - label: "Auto-imports"
-      description: "Cero configuración manual"
+    - label: "SSR · SSG · CSR"
+      description: "Estrategias de renderizado según cada página"
+    - label: "Nitro"
+      description: "Servidor, API y despliegue en una sola base"
+    - label: "Auto-imports tipados"
+      description: "Menos fricción y mejor mantenibilidad"
 ai:
   title: "Potencia tus aplicaciones con<br/>[Inteligencia Artificial]{.text-primary}"
   description: "Integramos IA en tus aplicaciones para automatizar tareas, optimizar procesos y generar insights valiosos. Transforma tu negocio con soluciones inteligentes que aprenden y se adaptan."
