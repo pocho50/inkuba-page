@@ -100,6 +100,9 @@ export const collections = {
         ),
       }),
       blog: createBaseSchema().extend({
+        readMoreLabel: z.string().nonempty(),
+        viewAllLabel: z.string().nonempty(),
+        viewAllTo: z.string().nonempty(),
         articles: z.array(
           createBaseSchema().extend({
             date: z.string().nonempty(),
@@ -139,7 +142,19 @@ export const collections = {
         ),
       }),
       cta: createBaseSchema().extend({
-        links: z.array(createLinkSchema()),
+        buttonLabel: z.string().nonempty(),
+        modal: createBaseSchema(),
+        form: z.object({
+          nameLabel: z.string().nonempty(),
+          namePlaceholder: z.string().nonempty(),
+          emailLabel: z.string().nonempty(),
+          emailPlaceholder: z.string().nonempty(),
+          projectLabel: z.string().nonempty(),
+          projectPlaceholder: z.string().nonempty(),
+          cancelLabel: z.string().nonempty(),
+          submitLabel: z.string().nonempty(),
+        }),
+        successToast: createBaseSchema(),
       }),
     }),
   }),
