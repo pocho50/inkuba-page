@@ -1,62 +1,144 @@
-# Nuxt Landing Template
+# Inkuba Page
 
-[![Nuxt UI](https://img.shields.io/badge/Made%20with-Nuxt%20UI-00DC82?logo=nuxt&labelColor=020420)](https://ui.nuxt.com)
+Sitio web de Inkuba construido con **Nuxt 4 + Nuxt UI + Nuxt Content**.
 
-Use this template to build your own landing page with [Nuxt UI](https://ui.nuxt.com) quickly.
+Incluye:
 
-- [Live demo](https://landing-template.nuxt.dev/)
-- [Documentation](https://ui.nuxt.com/docs/getting-started/installation/nuxt)
+- Landing principal con secciones de tecnología, IA, blog y CTA.
+- Contenido editable desde archivos YAML/Markdown.
+- Formulario de contacto conectado a Mailgun.
+- Protección anti-spam custom (sin cookies) en el formulario.
 
-<a href="https://landing-template.nuxt.dev/" target="_blank">
-  <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="https://ui.nuxt.com/assets/templates/nuxt/landing-dark.png">
-    <source media="(prefers-color-scheme: light)" srcset="https://ui.nuxt.com/assets/templates/nuxt/landing-light.png">
-    <img alt="Nuxt Landing Template" src="https://ui.nuxt.com/assets/templates/nuxt/landing-light.png">
-  </picture>
-</a>
+---
 
-## Quick Start
+## Stack
 
-```bash [Terminal]
-npm create nuxt@latest -- -t github:nuxt-ui-templates/landing
-```
+- [Nuxt 4](https://nuxt.com/)
+- [Nuxt UI](https://ui.nuxt.com/)
+- [Nuxt Content](https://content.nuxt.com/)
+- [Nuxt Image](https://image.nuxt.com/)
+- [Tailwind CSS 4](https://tailwindcss.com/)
+- [Mailgun](https://www.mailgun.com/) para envío de emails
 
-## Deploy your own
+---
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-name=landing&repository-url=https%3A%2F%2Fgithub.com%2Fnuxt-ui-templates%2Flanding&demo-image=https%3A%2F%2Fui.nuxt.com%2Fassets%2Ftemplates%2Fnuxt%2Flanding-dark.png&demo-url=https%3A%2F%2Flanding-template.nuxt.dev%2F&demo-title=Nuxt%20Landing%20Template&demo-description=A%20modern%20landing%20page%20template%20powered%20by%20Nuxt%20Content.)
+## Requisitos
 
-## Setup
+- Node.js 20+
+- pnpm 10+
 
-Make sure to install the dependencies:
+---
+
+## Instalación
 
 ```bash
 pnpm install
 ```
 
-## Development Server
+---
 
-Start the development server on `http://localhost:3000`:
+## Variables de entorno
+
+Crear un archivo `.env` en la raíz del proyecto:
+
+```env
+NUXT_MAILGUN_API_KEY=your_mailgun_api_key
+NUXT_MAILGUN_DOMAIN=your_mailgun_domain
+NUXT_MAILGUN_FROM=postmaster@your_domain
+NUXT_MAILGUN_TO=contact@your_company.com
+```
+
+> Estas variables se usan en `runtimeConfig` para `server/api/contact.post.ts`.
+
+---
+
+## Desarrollo
 
 ```bash
 pnpm dev
 ```
 
-## Production
+Servidor local por defecto: `http://localhost:3000`
 
-Build the application for production:
+---
+
+## Scripts disponibles
+
+```bash
+pnpm dev        # Modo desarrollo
+pnpm build      # Build de producción
+pnpm preview    # Preview del build
+pnpm lint       # ESLint
+pnpm typecheck  # Type check de Nuxt/TS
+```
+
+---
+
+## Estructura del proyecto
+
+```text
+app/
+  components/home/      # Secciones de la home
+  pages/index.vue       # Página principal
+content/
+  index.yml             # Contenido de la landing
+  blog/*.md             # Artículos del blog
+server/api/
+  contact.post.ts       # Endpoint de contacto (Mailgun + anti-spam)
+public/
+  video/                # Assets estáticos (ej. demo de IA)
+```
+
+---
+
+## Cómo editar contenido
+
+### Landing
+
+Editar `content/index.yml`:
+
+- Hero y secciones (`section`, `vuenuxt`, `ai`, `blog`, `cta`)
+- Textos de UI (incluyendo labels del formulario)
+- Label del colapsable de video en IA (`ai.collapsibleLabel`)
+
+### Blog
+
+Agregar/editar archivos en `content/blog/*.md` con frontmatter.
+
+---
+
+## Formulario de contacto
+
+Flujo:
+
+1. Frontend envía datos a `POST /api/contact`
+2. Backend valida campos y anti-spam
+3. Backend envía email vía Mailgun
+
+### Anti-spam sin cookies
+
+Implementado en frontend y backend:
+
+- **Honeypot** (`website`)
+- **Tiempo mínimo de envío** (`formTimestamp`)
+- **Desafío matemático simple** (`mathAnswer`)
+
+No usa Turnstile ni cookies.
+
+---
+
+## Deploy
+
+Build de producción:
 
 ```bash
 pnpm build
 ```
 
-Locally preview production build:
+Preview local del build:
 
 ```bash
 pnpm preview
 ```
 
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
-
-## Renovate integration
-
-Install [Renovate GitHub app](https://github.com/apps/renovate/installations/select_target) on your repository and you are good to go.
+Al desplegar, configurar las mismas variables de entorno de Mailgun en el proveedor.

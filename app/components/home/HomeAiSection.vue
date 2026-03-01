@@ -1,10 +1,16 @@
 <script setup lang="ts">
 import { formatInlineTitle } from "~/utils/formatInlineTitle";
 
+const requestURL = useRequestURL();
+const aiVideoSrc = computed(() =>
+  new URL("/video/ia-vercel.mp4", requestURL.origin).toString(),
+);
+
 defineProps<{
   section: {
     title: string;
     description: string;
+    collapsibleLabel?: string;
     features: Array<{ title: string; description: string; icon: string }>;
   };
 }>();
@@ -42,7 +48,10 @@ defineProps<{
     </template>
 
     <template #title>
-      <span class="*:leading-9 *:my-0" v-html="formatInlineTitle(section.title)" />
+      <span
+        class="*:leading-9 *:my-0"
+        v-html="formatInlineTitle(section.title)"
+      />
     </template>
 
     <template #description>
@@ -64,6 +73,35 @@ defineProps<{
           :delay="index * 120"
         />
       </div>
+
+      <UCollapsible
+        class="mx-auto mt-10 w-full max-w-6xl rounded-2xl border border-primary/20 bg-linear-to-b from-primary/5 to-transparent p-2 shadow-sm shadow-primary/10"
+      >
+        <UButton
+          :label="
+            section.collapsibleLabel ||
+            'Ver ejemplo de IA integrada a una aplicación'
+          "
+          color="neutral"
+          variant="ghost"
+          trailing-icon="i-lucide-chevron-down"
+          block
+          class="justify-between rounded-xl text-sm font-semibold hover:bg-transparent"
+        />
+        <template #content>
+          <div class="mt-3 px-2 pb-2">
+            <video
+              class="mx-auto w-full rounded-2xl shadow-2xl shadow-black/30"
+              controls
+              playsinline
+              preload="metadata"
+            >
+              <source :src="aiVideoSrc" type="video/mp4" />
+              Tu navegador no soporta video HTML5.
+            </video>
+          </div>
+        </template>
+      </UCollapsible>
     </UContainer>
   </UPageSection>
 </template>

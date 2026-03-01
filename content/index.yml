@@ -54,6 +54,7 @@ vuenuxt:
 ai:
   title: "Potencia tus aplicaciones con<br/>[Inteligencia Artificial]{.text-primary}"
   description: "Integramos IA en tus aplicaciones para automatizar tareas, optimizar procesos y generar insights valiosos. Transforma tu negocio con soluciones inteligentes que aprenden y se adaptan."
+  collapsibleLabel: "Ver ejemplo de IA integrada a una aplicación"
   features:
     - title: Automatización Inteligente
       description: Elimina tareas repetitivas con workflows automatizados impulsados por IA. Reduce costos operativos y libera a tu equipo para enfocarse en lo que realmente importa.
