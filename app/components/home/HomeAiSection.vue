@@ -74,7 +74,7 @@ defineProps<{
         />
       </div>
 
-      <UCollapsible
+      <!-- <UCollapsible
         class="mx-auto mt-10 w-full max-w-6xl rounded-2xl border border-primary/20 bg-linear-to-b from-primary/5 to-transparent p-2 shadow-sm shadow-primary/10"
       >
         <UButton
@@ -101,7 +101,7 @@ defineProps<{
             </video>
           </div>
         </template>
-      </UCollapsible>
+      </UCollapsible> -->
     </UContainer>
   </UPageSection>
 </template>
