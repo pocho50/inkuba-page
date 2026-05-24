@@ -10,16 +10,16 @@ El discurso de que “la IA multiplica la productividad” suele medir lo más f
 
 Pero en proyectos reales, el cuello de botella rara vez fue únicamente la generación de código, sino otros factores como:
 
-- reuniones de alineamiento, como refinement, planning o dailies;
-- diseño de arquitectura;
-- coordinación entre equipos;
-- reuniones postergadas;
-- toma de decisiones dilatadas;
-- mala comunicación;
-- requisitos ambiguos;
-- el clásico cliente que “sabe lo que quiere pero no sabe explicarlo”;
-- depuración de problemas complejos;
-- refactorización y deuda técnica.
+- reuniones de alineamiento, como refinement, planning o dailies
+- diseño de arquitectura
+- coordinación entre equipos
+- reuniones postergadas
+- toma de decisiones dilatadas
+- mala comunicación
+- requisitos ambiguos
+- el clásico cliente que “sabe lo que quiere pero no sabe explicarlo”
+- depuración de problemas complejos
+- refactorización y deuda técnica
 
 La IA acelera justamente la parte que muchas veces ya no era el problema principal. Como consecuencia, algunos estudios muestran que la productividad real no aumenta tanto como se esperaba.
 
@@ -31,11 +31,11 @@ Un programador senior normalmente puede seguir, entender e incluso auditar el c�
 
 Cuando la IA genera código demasiado rápido empiezan a aparecer:
 
-- abstracciones innecesarias;
-- dependencias ocultas;
-- patrones inconsistentes;
-- código “plausible” pero mal razonado;
-- decisiones arquitectónicas tomadas sin contexto.
+- abstracciones innecesarias
+- dependencias ocultas
+- patrones inconsistentes
+- código “plausible” pero mal razonado
+- decisiones arquitectónicas tomadas sin contexto
 
 Y como el código “parece profesional”, cuesta mucho más detectar problemas temprano.
 
@@ -49,4 +49,4 @@ Históricamente, un junior aprendía porque escribía código, se equivocaba, le
 
 La IA elimina gran parte de esa fricción, y sin esa fricción muchas veces no aparece el conocimiento profundo.
 
-En conclusión, la IA sí puede acelerar y mejorar partes importantes del desarrollo. Negarlo sería absurdo. Pero todavía tenemos que aprender cuál es la forma más efectiva de usarla y no dejarnos llevar por un hype que puede hacernos tomar malas decisiones y, a largo plazo, generar más problemas que soluciones.
+En conclusión, la IA sí puede acelerar y mejorar partes importantes del desarrollo. Negarlo sería absurdo. Pero todavía tenemos que aprender cuál es la forma más efectiva de usarla, desarrollar mejores prácticas y no dejarnos llevar por un hype que puede hacernos tomar malas decisiones y, a largo plazo, generar más problemas que soluciones.
