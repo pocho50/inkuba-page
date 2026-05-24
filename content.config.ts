@@ -52,6 +52,7 @@ export const collections = {
     schema: z.object({
       date: z.string().nonempty(),
       category: z.string().nonempty(),
+      draft: z.boolean().optional(),
       icon: z.string().optional().editor({ input: "icon" }),
       image: z.string().optional().editor({ input: "media" }),
     }),

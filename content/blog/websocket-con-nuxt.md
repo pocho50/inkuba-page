@@ -1,7 +1,7 @@
 ---
 title: "Cómo usar WebSockets con Nuxt: guía práctica"
 description: "Aprende a implementar comunicación en tiempo real con Nuxt usando defineWebSocketHandler en el servidor y useWebSocket en el cliente."
-date: "28 de febrero de 2026"
+date: "2026-02-28"
 category: "Nuxt"
 icon: "i-lucide-radio-tower"
 image: "/images/blog/websocket-nuxt.png"

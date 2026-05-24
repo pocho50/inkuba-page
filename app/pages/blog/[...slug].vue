@@ -1,10 +1,12 @@
 <script setup lang="ts">
+import { formatDate } from "~/utils/formatDate";
+
 const route = useRoute();
 const { data: article } = await useAsyncData(route.path, () =>
   queryCollection("blog").path(route.path).first(),
 );
 
-if (!article.value) {
+if (!article.value || article.value.draft) {
   throw createError({
     statusCode: 404,
     statusMessage: "Artículo no encontrado",
@@ -47,7 +49,7 @@ useSeoMeta({
               size="sm"
             />
             <span v-if="article?.date" class="text-xs text-muted">
-              {{ article.date }}
+              {{ formatDate(article.date) }}
             </span>
           </div>
 

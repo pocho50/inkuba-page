@@ -1,6 +1,11 @@
 <script setup lang="ts">
+import { formatDate } from "~/utils/formatDate";
+
 const { data: articles } = await useAsyncData("blog-list", () =>
-  queryCollection("blog").order("date", "DESC").all(),
+  queryCollection("blog")
+    .order("date", "DESC")
+    .all()
+    .then((articles) => articles.filter((article) => !article.draft)),
 );
 
 useSeoMeta({
@@ -43,9 +48,7 @@ useSeoMeta({
           class="blog-list-card group flex flex-col overflow-hidden rounded-xl border border-default bg-default/50 transition-all duration-300 hover:border-primary/40 hover:shadow-lg hover:shadow-primary/5"
           :style="{ '--blog-list-delay': `${index * 100}ms` }"
         >
-          <div
-            class="relative h-48 overflow-hidden bg-elevated"
-          >
+          <div class="relative h-48 overflow-hidden bg-elevated">
             <div
               class="absolute inset-0 flex items-center justify-center bg-primary/5"
             >
@@ -58,12 +61,10 @@ useSeoMeta({
 
           <div class="flex flex-1 flex-col gap-3 p-5">
             <div class="flex items-center justify-between gap-3">
-              <UBadge
-                :label="article.category"
-                variant="subtle"
-                size="sm"
-              />
-              <span class="text-xs text-muted">{{ article.date }}</span>
+              <UBadge :label="article.category" variant="subtle" size="sm" />
+              <span class="text-xs text-muted">{{
+                formatDate(article.date)
+              }}</span>
             </div>
 
             <h2
@@ -87,7 +88,10 @@ useSeoMeta({
       </div>
 
       <div v-else class="py-20 text-center">
-        <UIcon name="i-lucide-notebook-pen" class="mx-auto size-12 text-muted" />
+        <UIcon
+          name="i-lucide-notebook-pen"
+          class="mx-auto size-12 text-muted"
+        />
         <p class="mt-4 text-lg text-muted">
           Próximamente publicaremos nuevos artículos.
         </p>

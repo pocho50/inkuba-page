@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { formatDate } from "~/utils/formatDate";
 import { formatInlineTitle } from "~/utils/formatInlineTitle";
 
 defineProps<{
@@ -12,7 +13,12 @@ defineProps<{
 }>();
 
 const { data: articles } = await useAsyncData("home-blog", () =>
-  queryCollection("blog").order("date", "DESC").limit(3).all(),
+  queryCollection("blog")
+    .order("date", "DESC")
+    .all()
+    .then((articles) =>
+      articles.filter((article) => !article.draft).slice(0, 3),
+    ),
 );
 </script>
 
@@ -69,7 +75,9 @@ const { data: articles } = await useAsyncData("home-blog", () =>
           <div class="flex flex-1 flex-col gap-3 p-5">
             <div class="flex items-center justify-between gap-3">
               <UBadge :label="article.category" variant="subtle" size="sm" />
-              <span class="text-xs text-muted">{{ article.date }}</span>
+              <span class="text-xs text-muted">{{
+                formatDate(article.date)
+              }}</span>
             </div>
 
             <h3
