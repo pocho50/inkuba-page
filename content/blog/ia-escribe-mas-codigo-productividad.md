@@ -41,7 +41,7 @@ Y como el código “parece profesional”, cuesta mucho más detectar problemas
 
 Un junior que “terminó” una tarea usando IA muchas veces, en realidad, la entiende peor que si la hubiera hecho manualmente.
 
-Y la confianza va en sentido inverso. Según el artículo [Junior Developers in the Age of AI: Who Trains the Next Generation of Engineers?](https://www.softwareseni.com/junior-developers-in-the-age-of-ai-who-trains-the-next-generation-of-engineers/), el 78% de los juniors confía ciegamente en la IA, contra solo el 39% de los seniors. Es decir, quienes menos entienden, más confían. Esa combinación puede ser peligrosa.
+Y la confianza va en sentido inverso. Según el paper [The Impact of Generative AI on Critical Thinking: Self-Reported Reductions in Cognitive Effort and Confidence Effects From a Survey of Knowledge Workers](https://arxiv.org/html/2601.16700v1), el 78% de los perfiles junior tiende a confiar mucho más en respuestas concretas y detalladas generadas por IA, frente al 39% de los perfiles senior. En otras palabras, quienes tienen menos experiencia suelen cuestionar menos las respuestas de la IA.
 
 El modelo de aprendizaje tradicional se está rompiendo.
 
