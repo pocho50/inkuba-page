@@ -1,36 +1,35 @@
 <script setup lang="ts">
 const route = useRoute();
+const { open: openContactModal } = useContactModal();
+
+const isMenuOpen = ref(false);
 
 const items = [
   {
     label: "Inicio",
     to: "/",
-    path: "/",
+  },
+  {
+    label: "IA Search",
+    to: "/ia-search",
   },
   {
     label: "Blog",
     to: "/blog",
-    path: "/blog",
-  },
-  {
-    label: "Contacto",
-    to: "/#contact",
-    path: "/",
-    hash: "#contact",
   },
 ];
 
-const isActive = (item: { path: string; hash?: string }) => {
-  if (item.hash) {
-    return route.path === item.path && route.hash === item.hash;
-  }
+const isActive = (item: { to: string }) =>
+  route.path === item.to && !route.hash;
 
-  return route.path === item.path && !route.hash;
+const onContactClick = () => {
+  isMenuOpen.value = false;
+  openContactModal();
 };
 </script>
 
 <template>
-  <UHeader>
+  <UHeader v-model:open="isMenuOpen">
     <template #left>
       <NuxtLink to="/">
         <AppLogo class="w-auto h-12 shrink-0" />
@@ -52,6 +51,13 @@ const isActive = (item: { path: string; hash?: string }) => {
         >
           {{ item.label }}
         </NuxtLink>
+        <button
+          type="button"
+          class="cursor-pointer text-sm text-muted transition-colors hover:text-highlighted"
+          @click="onContactClick"
+        >
+          Contacto
+        </button>
       </nav>
     </template>
 
@@ -70,6 +76,13 @@ const isActive = (item: { path: string; hash?: string }) => {
         >
           {{ item.label }}
         </NuxtLink>
+        <button
+          type="button"
+          class="cursor-pointer rounded-md px-2.5 py-2 text-left text-sm text-muted transition-colors hover:bg-muted/40 hover:text-highlighted"
+          @click="onContactClick"
+        >
+          Contacto
+        </button>
       </nav>
     </template>
   </UHeader>

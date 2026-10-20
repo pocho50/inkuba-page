@@ -51,6 +51,23 @@ vuenuxt:
       description: "Servidor, API y despliegue en una sola base"
     - label: "Auto-imports tipados"
       description: "Menos fricción y mejor mantenibilidad"
+iasearch:
+  headline: Nuevo producto
+  title: "Búsqueda inteligente para tu ecommerce con [IA Search]{.text-primary}"
+  description: "Un buscador con IA que entiende lo que tus clientes quieren, aunque lo escriban en lenguaje natural, y les recomienda los productos más relevantes de tu catálogo."
+  features:
+    - title: Entiende búsquedas complejas
+      description: Interpreta consultas en lenguaje natural, como si hablaran con una persona.
+      icon: i-lucide-search
+    - title: Recomienda productos relevantes
+      description: Analiza tu catálogo y sugiere las mejores opciones para cada necesidad.
+      icon: i-lucide-sparkles
+    - title: Capta leads
+      description: Solicita los datos de contacto de los interesados para que tu equipo de ventas continúe la conversación.
+      icon: i-lucide-users-round
+  link:
+    label: Conocé IA Search
+    to: /ia-search
 ai:
   title: "Potencia tus aplicaciones con<br/>[Inteligencia Artificial]{.text-primary}"
   description: "Integramos IA en tus aplicaciones para automatizar tareas, optimizar procesos y generar insights valiosos. Transforma tu negocio con soluciones inteligentes que aprenden y se adaptan."

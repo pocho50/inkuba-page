@@ -30,7 +30,7 @@ useSeoMeta({
 
     <USeparator :ui="{ border: 'border-primary/30' }" />
 
-    <HomeVueNuxtSection :section="page.vuenuxt" />
+    <HomeIaSearchSection :section="page.iasearch" />
 
     <USeparator :ui="{ border: 'border-primary/30' }" />
 

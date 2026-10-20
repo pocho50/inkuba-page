@@ -62,7 +62,16 @@ const num2 = ref(Math.floor(Math.random() * 10) + 1);
 const mathQuestion = computed(() => `${num1.value} + ${num2.value}`);
 const expectedAnswer = computed(() => num1.value + num2.value);
 
-const isContactModalOpen = ref(false);
+const { isOpen: isContactModalOpen, hosts: contactModalHosts } =
+  useContactModal();
+
+onMounted(() => {
+  contactModalHosts.value++;
+});
+onBeforeUnmount(() => {
+  contactModalHosts.value--;
+});
+
 const contactForm = reactive({
   name: "",
   email: "",
@@ -76,15 +85,19 @@ const isSubmitting = ref(false);
 const toast = useToast();
 
 // Reset math challenge when modal opens
-watch(isContactModalOpen, (isOpen) => {
-  if (isOpen) {
-    num1.value = Math.floor(Math.random() * 10) + 1;
-    num2.value = Math.floor(Math.random() * 10) + 1;
-    contactForm.formTimestamp = Date.now();
-    contactForm.website = "";
-    contactForm.mathAnswer = "";
-  }
-});
+watch(
+  isContactModalOpen,
+  (isOpen) => {
+    if (isOpen) {
+      num1.value = Math.floor(Math.random() * 10) + 1;
+      num2.value = Math.floor(Math.random() * 10) + 1;
+      contactForm.formTimestamp = Date.now();
+      contactForm.website = "";
+      contactForm.mathAnswer = "";
+    }
+  },
+  { immediate: true },
+);
 
 const validate = (state: ContactFormState): ContactFormError[] => {
   const errors: ContactFormError[] = [];

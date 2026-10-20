@@ -93,6 +93,18 @@ export const collections = {
           }),
         ),
       }),
+      iasearch: createBaseSchema().extend({
+        headline: z.string().optional(),
+        features: z.array(
+          createBaseSchema().extend({
+            icon: z.string().editor({ input: "icon" }),
+          }),
+        ),
+        link: z.object({
+          label: z.string().nonempty(),
+          to: z.string().nonempty(),
+        }),
+      }),
       ai: createBaseSchema().extend({
         features: z.array(
           createBaseSchema().extend({
