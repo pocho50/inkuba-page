@@ -4,9 +4,9 @@ import ProductVisual from "~/components/iasearch/ProductVisual.vue";
 
 useHead({ htmlAttrs: { lang: "es" } });
 useSeoMeta({
-  title: "IA Search · Búsqueda inteligente para tu ecommerce | Inkuba",
+  title: "Buscador de productos con IA para Ecommerce | Inkuba",
   description:
-    "Una experiencia de búsqueda inteligente que entiende lo que tus clientes quieren y recomienda los productos más relevantes de tu catálogo. Solicitá una demo de IA Search.",
+    "Transformá la búsqueda de tu tienda online con IA. Entendé lo que buscan tus clientes, recomendá productos relevantes y generá oportunidades de venta.",
   ogTitle: "IA Search · Búsqueda inteligente para tu ecommerce",
   ogDescription:
     "Ayudá a tus clientes a encontrar lo que necesitan. Conocé IA Search de Inkuba.",
@@ -94,16 +94,11 @@ const cta = {
       <div class="hero-orb" aria-hidden="true" />
       <div class="wrap hero-layout">
         <div class="hero-copy">
-          <p class="eyebrow hero-in" style="--d: 0ms">
-            BUSCADOR DE PRODUCTOS CON IA
-          </p>
-          <h1 id="ia-title" class="hero-in" style="--d: 90ms">
-            Tus clientes encuentran lo que necesitan, <span>sin esfuerzo</span>
+          <h1 id="ia-title" class="hero-in" style="--d: 0ms">
+            Buscador de productos con IA <span>para ecommerce</span>
           </h1>
-          <p class="hero-description hero-in" style="--d: 180ms">
-            Una experiencia de búsqueda inteligente que entiende lo que tus
-            clientes quieren y recomienda los productos más relevantes de tu
-            catálogo.
+          <p class="hero-description hero-in" style="--d: 90ms">
+            Tus clientes encuentran lo que necesitan, sin esfuerzo.
           </p>
           <div class="hero-actions hero-in" style="--d: 270ms">
             <button
@@ -276,6 +271,61 @@ const cta = {
           </div>
         </article>
       </div>
+    </section>
+
+    <section
+      class="wrap integrations section-space"
+      aria-labelledby="integrations-title"
+    >
+      <header class="section-heading" data-reveal>
+        <div>
+          <p class="eyebrow">INTEGRACIÓN SIMPLE</p>
+          <h2 id="integrations-title">
+            Tu plataforma,<br /><span>nuestra integración.</span>
+          </h2>
+        </div>
+        <p>
+          Sumá IA Search a cualquier ecommerce de forma sencilla. No importa qué
+          tecnología use tu tienda. Nos adaptamos a ella para que puedas empezar
+          sin complicaciones.
+        </p>
+      </header>
+      <ul
+        class="platform-list"
+        aria-label="Plataformas de ecommerce"
+        data-reveal
+      >
+        <li style="--i: 0">
+          <span class="platform-icon">
+            <UIcon name="i-simple-icons-woocommerce" aria-hidden="true" />
+          </span>
+          <span class="platform-copy">
+            <strong>WooCommerce</strong>
+            <span>Tiendas sobre WordPress</span>
+          </span>
+        </li>
+        <li style="--i: 1">
+          <span class="platform-icon">
+            <UIcon name="i-simple-icons-shopify" aria-hidden="true" />
+          </span>
+          <span class="platform-copy">
+            <strong>Shopify</strong>
+            <span>Shopify y Shopify Plus</span>
+          </span>
+        </li>
+        <li style="--i: 2">
+          <span class="platform-icon">
+            <UIcon name="i-lucide-code-xml" aria-hidden="true" />
+          </span>
+          <span class="platform-copy">
+            <strong>Desarrollos a medida</strong>
+            <span>Integración personalizada</span>
+          </span>
+        </li>
+      </ul>
+      <p class="platform-note" data-reveal style="--delay: 200ms">
+        ¿Usás otra plataforma? Nos adaptamos a tu stack.
+      </p>
     </section>
 
     <section class="adoption" aria-labelledby="adoption-title">
@@ -527,8 +577,9 @@ h1 span {
 }
 .hero-description {
   color: #c7c0b9;
-  font-size: 17px;
-  line-height: 1.75;
+  font-size: clamp(24px, 2.2vw, 30px);
+  font-weight: 500;
+  line-height: 1.4;
   max-width: 440px;
 }
 .hero-actions {
@@ -622,7 +673,7 @@ h2 span {
 }
 .section-heading > p,
 .faq-note {
-  font-size: 16px;
+  font-size: 18px;
   line-height: 1.8;
   color: #bbb3ac;
   max-width: 380px;
@@ -910,6 +961,108 @@ figure {
   margin-top: 6px;
 }
 
+/* Integrations */
+.integrations {
+  border-top: 1px solid #ffffff15;
+}
+.integrations .section-heading {
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+}
+.integrations .section-heading > p {
+  max-width: none;
+  font-size: 20px;
+  line-height: 1.55;
+}
+.platform-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+  gap: 16px;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.platform-list li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 26px 24px;
+  border: 1px solid #ffffff1f;
+  border-radius: 18px;
+  background: linear-gradient(160deg, #24211e, #1a1917);
+  box-shadow: 0 1px 0 #ffffff12 inset;
+  overflow: hidden;
+  transition:
+    opacity 0.6s ease calc(var(--i) * 0.12s),
+    transform 0.7s var(--ease-out) calc(var(--i) * 0.12s),
+    translate 0.3s var(--ease-out),
+    border-color 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.platform-list li::before {
+  content: "";
+  position: absolute;
+  inset: 0 0 auto;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, #f0b58b66, transparent);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+.reveal-ready .platform-list:not(.is-visible) li {
+  opacity: 0;
+  transform: translateY(20px);
+}
+@media (hover: hover) {
+  .platform-list li:hover {
+    translate: 0 -4px;
+    border-color: #edab7c44;
+    box-shadow:
+      0 1px 0 #ffffff12 inset,
+      0 20px 40px #0005;
+  }
+  .platform-list li:hover::before {
+    opacity: 1;
+  }
+}
+.platform-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  width: 54px;
+  height: 54px;
+  border: 1px solid #edab7c33;
+  border-radius: 15px;
+  background: linear-gradient(160deg, #edab7c26, #edab7c0a);
+  color: #f0b58b;
+  font-size: 27px;
+  transition:
+    transform 0.4s var(--ease-spring),
+    border-color 0.3s ease;
+}
+.platform-list li:hover .platform-icon {
+  transform: rotate(-6deg) scale(1.06);
+  border-color: #edab7c66;
+}
+.platform-copy {
+  display: grid;
+  gap: 4px;
+}
+.platform-copy strong {
+  font-size: 18px;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+}
+.platform-copy > span {
+  font-size: 14px;
+  color: #a89f96;
+}
+.platform-note {
+  margin-top: 24px;
+  font-size: 15px;
+  color: #a89f96;
+}
+
 /* Adoption */
 .adoption {
   padding-block: 80px;
@@ -1171,9 +1324,6 @@ summary:focus-visible {
   h1 {
     font-size: 39px;
   }
-  .hero-description {
-    font-size: 16px;
-  }
   .hero-actions {
     gap: 8px;
   }
@@ -1181,6 +1331,7 @@ summary:focus-visible {
     padding-block: 56px;
   }
   .section-heading,
+  .integrations .section-heading,
   .benefit-grid,
   .opportunities,
   .steps,

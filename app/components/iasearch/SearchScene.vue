@@ -82,7 +82,7 @@ const products = [
             <ProductVisual :product="product.image" />
           </div>
           <div class="product-copy">
-            <h3>{{ product.name }}</h3>
+            <strong class="product-name">{{ product.name }}</strong>
             <p>{{ product.detail }}</p>
             <span class="product-action" aria-hidden="true">
               Ver detalles
@@ -294,7 +294,7 @@ const products = [
     transform: translateX(3px);
   }
 }
-.product h3 {
+.product .product-name {
   font-size: 16px;
   line-height: 1.4;
   font-weight: 600;

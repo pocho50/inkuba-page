@@ -26,7 +26,7 @@ const props = withDefaults(
       :class="props.maskClass"
       :style="{
         maskImage: `url(${props.maskSrc})`,
-        webkitMaskImage: `url(${props.maskSrc})`,
+        WebkitMaskImage: `url(${props.maskSrc})`,
       }"
     />
     <div class="absolute inset-0 flex items-center justify-center">
