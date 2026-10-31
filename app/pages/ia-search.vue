@@ -7,9 +7,17 @@ useSeoMeta({
   title: "Buscador de productos con IA para Ecommerce | Inkuba",
   description:
     "Transformá la búsqueda de tu tienda online con IA. Entendé lo que buscan tus clientes, recomendá productos relevantes y generá oportunidades de venta.",
-  ogTitle: "IA Search · Búsqueda inteligente para tu ecommerce",
+  ogTitle: "Buscador de productos con IA para Ecommerce | Inkuba",
   ogDescription:
-    "Ayudá a tus clientes a encontrar lo que necesitan. Conocé IA Search de Inkuba.",
+    "Transformá la búsqueda de tu tienda online con IA. Entendé lo que buscan tus clientes, recomendá productos relevantes y generá oportunidades de venta.",
+  ogImage: 'https://inkuba.com/images/ia-search-social.png',
+  ogImageWidth: 1200,
+  ogImageHeight: 630,
+  ogImageType: 'image/png',
+  ogImageAlt: 'Inkuba IA Search: buscador de productos con IA para ecommerce',
+  twitterCard: 'summary_large_image',
+  twitterImage: 'https://inkuba.com/images/ia-search-social.png',
+  twitterImageAlt: 'Inkuba IA Search: buscador de productos con IA para ecommerce'
 });
 
 const landing = ref<HTMLElement | null>(null);
